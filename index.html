@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoodDiary - Nhật Ký Giao Diện Đẹp</title>
+    <!-- Nhúng thư viện Tailwind CSS giúp giao diện lên màu pastel sang xịn mịn -->
+    <script src="https://tailwindcss.com"></script>
+    <style>
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 min-h-screen text-gray-800">
+
+    <!-- 🔑 GIAO DIỆN ĐĂNG NHẬP -->
+    <div id="loginPage" class="flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-purple-100">
+            <div class="text-center mb-8">
+                <span class="text-4xl">🔑</span>
+                <h2 class="text-3xl font-extrabold text-gray-800 mt-2">Chào Quay Trở Lại</h2>
+                <p class="text-gray-500 text-sm mt-1">Đăng nhập hệ thống Nhật ký Tiện ích</p>
+            </div>
+            <form onsubmit="handleLogin(event)" class="space-y-5">
+                <input type="text" id="loginUser" required placeholder="Tên tài khoản (Gõ bừa cũng được)..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <input type="password" id="loginPass" required placeholder="Mật khẩu..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all cursor-pointer">Đăng Nhập</button>
+            </form>
+            <p class="text-sm text-center text-gray-600 mt-6">Chưa có tài khoản? <button onclick="switchPage('registerPage')" class="text-purple-600 font-bold hover:underline cursor-pointer">Đăng ký mới</button></p>
+        </div>
+    </div>
+
+    <!-- 📝 GIAO DIỆN ĐĂNG KÝ -->
+    <div id="registerPage" class="hidden flex items-center justify-center min-h-screen p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-purple-100">
+            <div class="text-center mb-8">
+                <span class="text-4xl">📝</span>
+                <h2 class="text-3xl font-extrabold text-gray-800 mt-2">Tạo Tài Khoản</h2>
+                <p class="text-gray-500 text-sm mt-1">Bắt đầu hành trình lưu giữ cảm xúc</p>
+            </div>
+            <form onsubmit="handleRegister(event)" class="space-y-5">
+                <input type="text" id="regUser" required placeholder="Tên tài khoản mới..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <input type="password" id="regPass" required placeholder="Mật khẩu..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
+                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all cursor-pointer">Đăng Ký Ngay</button>
+            </form>
+            <p class="text-sm text-center text-gray-600 mt-6">Đã có tài khoản? <button onclick="switchPage('loginPage')" class="text-purple-600 font-bold hover:underline cursor-pointer">Đăng nhập</button></p>
+        </div>
+    </div>
+
+    <!-- 🔮 GIAO DIỆN CHÍNH (DASHBOARD) -->
+    <div id="dashboardPage" class="hidden bg-slate-50 min-h-screen">
+        <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100 px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2"><span class="text-2xl">🔮</span><span class="text-xl font-black text-purple-600">MoodDiary</span></div>
+            <div class="flex items-center space-x-4">
+                <p class="text-sm font-bold text-gray-800" id="displayUsername">@user</p>
+                <button onclick="handleLogout()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-100 cursor-pointer">Đăng xuất</button>
+            </div>
+        </nav>
+
+        <main class="max-w-7xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 pb-12">
+            <div class="lg:col-span-3 space-y-8">
+                <!-- Form Viết Nhật Ký -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4">✍️ Hôm nay tâm trạng của bạn thế nào?</h3>
+                    <form onsubmit="handleCabinetSubmit(event)" class="space-y-4">
+                        <input type="text" id="diaryTitle" placeholder="Tiêu đề ngày hôm nay..." required class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
+                        <textarea id="diaryContent" rows="4" placeholder="Hãy viết ra những suy nghĩ của bạn..." required class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
+                        <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
+                            <select id="diaryMood" class="p-2 border border-gray-200 rounded-xl bg-gray-50 font-medium text-sm">
+                                <option>🚀 Tuyệt vời</option><option>🙂 Vui vẻ</option><option>😐 Bình thường</option><option>😢 Buồn bã</option><option>😡 Bực bội</option>
+                            </select>
+                            <div class="flex items-center space-x-6">
+                                <button type="submit" class="bg-purple-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-purple-700 cursor-pointer">Lưu Bài Viết</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Danh sách bài viết hiển thị -->
+                <div class="space-y-4">
+                    <h3 class="text-xl font-extrabold text-gray-800">📅 Nhật ký đã lưu của bạn</h3>
+                    <div id="diaryList" class="space-y-4"></div>
+                </div>
+            </div>
+            
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br from-purple-600 to-indigo-600 p-6 rounded-2xl text-white shadow-xl">
+                    <h4 class="font-bold text-lg mb-2">Trang web HTML Thuần</h4>
+                    <p class="text-xs opacity-85">Dữ liệu được lưu an toàn trực tiếp vào trình duyệt máy của bạn thông qua LocalStorage, không cần server máy chủ phức tạp!</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- ⚡ LOGIC XỬ LÝ CHUYỂN TRANG VÀ LƯU TRỮ TRÌNH DUYỆT (JAVASCRIPT) -->
+    <script>
+        function switchPage(pageId) {
+            document.getElementById('loginPage').style.display = pageId === 'loginPage' ? 'flex' : 'none';
+            document.getElementById('registerPage').style.display = pageId === 'registerPage' ? 'flex' : 'none';
+            document.getElementById('dashboardPage').style.display = pageId === 'dashboardPage' ? 'block' : 'none';
+        }
+
+        // Tự động ẩn trang ký và dashboard lúc mới vào
+        switchPage('loginPage');
+
+        function handleRegister(e) {
+            e.preventDefault();
+            alert("Đăng ký tài khoản ảo thành công! Giờ bạn có thể đăng nhập.");
+            switchPage('loginPage');
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const user = document.getElementById('loginUser').value;
+            document.getElementById('displayUsername').innerText = "@" + user;
+            switchPage('dashboardPage');
+            loadDiaries();
+        }
+
+        function loadDiaries() {
+            const list = document.getElementById('diaryList');
+            list.innerHTML = '';
+            
+            // Lấy dữ liệu nhật ký cũ từ bộ nhớ trình duyệt ra
+            let diaries = JSON.parse(localStorage.getItem('myDiaries')) || [];
+            
+            if (diaries.length === 0) {
+                list.innerHTML = '<p class="text-gray-500 italic text-center py-4">Chưa có bài viết nào. Hãy là người đầu tiên viết nhé!</p>';
+                return;
+            }
+
+            diaries.forEach(d => {
+                let border = 'border-l-gray-400';
+                if (d.mood.includes('🚀') || d.mood.includes('🙂')) border = 'border-l-green-500';
+                if (d.mood.includes('😢') || d.mood.includes('😡')) border = 'border-l-red-500';
+
+                list.innerHTML += `
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 ${border}">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="font-bold text-xl text-gray-800">${d.title}</h4>
+                                <p class="text-xs text-gray-400 mt-0.5">Thời gian: Vừa xong</p>
+                            </div>
+                            <span class="bg-purple-50 text-purple-700 text-xs px-3 py-1.5 rounded-full font-bold">${d.mood}</span>
+                        </div>
+                        <p class="text-gray-600 leading-relaxed">${d.content}</p>
+                    </div>`;
+            });
+        }
+
+        function handleCabinetSubmit(e) {
+            e.preventDefault();
+            const title = document.getElementById('diaryTitle').value;
+            const content = document.getElementById('diaryContent').value;
+            const mood = document.getElementById('diaryMood').value;
+
+            let diaries = JSON.parse(localStorage.getItem('myDiaries')) || [];
+            diaries.unshift({ title, content, mood }); // Thêm bài viết mới lên đầu
+            
+            // Lưu lại vào bộ nhớ trình duyệt
+            localStorage.setItem('myDiaries', JSON.stringify(diaries));
+
+            // Xóa nội dung ô nhập
+            document.getElementById('diaryTitle').value = '';
+            document.getElementById('diaryContent').value = '';
+            
+            loadDiaries();
+        }
+
+        function handleLogout() {
+            switchPage('loginPage');
+        }
+    </script>
+</body>
+</html>
