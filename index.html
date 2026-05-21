@@ -4,103 +4,161 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MoodDiary - Nhật Ký Giao Diện Đẹp</title>
-    <!-- Nhúng thư viện Tailwind CSS giúp giao diện lên màu pastel sang xịn mịn -->
+    <!-- Thư viện Tailwind CSS -->
     <script src="https://tailwindcss.com"></script>
+    
+    <!-- CSS Thủ công ép giao diện lên màu sắc pastel tuyệt đẹp kể cả khi Tailwind bị chặn -->
     <style>
         .hidden { display: none !important; }
+        body {
+            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #fce7f3 100%) !important;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .card-auth {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            width: 100%;
+            max-w: 400px;
+            margin: auto;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #f3e8ff;
+        }
+        .input-style {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 0.75rem;
+            margin-bottom: 1.25rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .input-style:focus {
+            border-color: #c084fc;
+            box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.2);
+        }
+        .btn-primary {
+            width: 100%;
+            padding: 0.85rem;
+            background: linear-gradient(to right, #a855f7, #6366f1);
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 15px -3px rgba(168, 85, 247, 0.3);
+            transition: opacity 0.2s;
+        }
+        .btn-primary:hover { opacity: 0.9; }
+        .text-link {
+            color: #a855f7;
+            font-weight: bold;
+            background: none;
+            border: none;
+            cursor: pointer;
+            text-decoration: underline;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-100 min-h-screen text-gray-800">
+<body>
 
     <!-- 🔑 GIAO DIỆN ĐĂNG NHẬP -->
-    <div id="loginPage" class="flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-purple-100">
-            <div class="text-center mb-8">
-                <span class="text-4xl">🔑</span>
-                <h2 class="text-3xl font-extrabold text-gray-800 mt-2">Chào Quay Trở Lại</h2>
-                <p class="text-gray-500 text-sm mt-1">Đăng nhập hệ thống Nhật ký Tiện ích</p>
+    <div id="loginPage" style="display: flex; min-height: 100vh; width: 100%; padding: 1rem; box-sizing: border-box;">
+        <div class="card-auth">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <span style="font-size: 3rem;">🔑</span>
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: #1f2937; margin: 0.5rem 0 0 0;">Chào Quay Trở Lại</h2>
+                <p style="color: #6b7280; font-size: 0.875rem; margin: 0.25rem 0 0 0;">Đăng nhập hệ thống Nhật ký Tiện ích</p>
             </div>
-            <form onsubmit="handleLogin(event)" class="space-y-5">
-                <input type="text" id="loginUser" required placeholder="Tên tài khoản (Gõ bừa cũng được)..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
-                <input type="password" id="loginPass" required placeholder="Mật khẩu..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all cursor-pointer">Đăng Nhập</button>
+            <form onsubmit="handleLogin(event)">
+                <label style="display: block; font-weight: 600; font-size: 0.875rem; color: #4b5563; margin-bottom: 0.5rem;">Tên tài khoản</label>
+                <input type="text" id="loginUser" tyranny required placeholder="Gõ bừa tên tên gì cũng được..." class="input-style">
+                
+                <label style="display: block; font-weight: 600; font-size: 0.875rem; color: #4b5563; margin-bottom: 0.5rem;">Mật khẩu</label>
+                <input type="password" id="loginPass" required placeholder="••••••••" class="input-style">
+                
+                <button type="submit" class="btn-primary">Đăng Nhập</button>
             </form>
-            <p class="text-sm text-center text-gray-600 mt-6">Chưa có tài khoản? <button onclick="switchPage('registerPage')" class="text-purple-600 font-bold hover:underline cursor-pointer">Đăng ký mới</button></p>
+            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: #4b5563;">Chưa có tài khoản? <button onclick="switchPage('registerPage')" class="text-link">Đăng ký mới</button></p>
         </div>
     </div>
 
     <!-- 📝 GIAO DIỆN ĐĂNG KÝ -->
-    <div id="registerPage" class="hidden flex items-center justify-center min-h-screen p-4">
-        <div class="bg-white p-8 rounded-2xl shadow-2xl w-full max-w-md border border-purple-100">
-            <div class="text-center mb-8">
-                <span class="text-4xl">📝</span>
-                <h2 class="text-3xl font-extrabold text-gray-800 mt-2">Tạo Tài Khoản</h2>
-                <p class="text-gray-500 text-sm mt-1">Bắt đầu hành trình lưu giữ cảm xúc</p>
+    <div id="registerPage" class="hidden" style="min-height: 100vh; width: 100%; padding: 1rem; box-sizing: border-box;">
+        <div class="card-auth">
+            <div style="text-align: center; margin-bottom: 2rem;">
+                <span style="font-size: 3rem;">📝</span>
+                <h2 style="font-size: 1.8rem; font-weight: 800; color: #1f2937; margin: 0.5rem 0 0 0;">Tạo Tài Khoản</h2>
+                <p style="color: #6b7280; font-size: 0.875rem; margin: 0.25rem 0 0 0;">Bắt đầu hành trình lưu giữ cảm xúc</p>
             </div>
-            <form onsubmit="handleRegister(event)" class="space-y-5">
-                <input type="text" id="regUser" required placeholder="Tên tài khoản mới..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
-                <input type="password" id="regPass" required placeholder="Mật khẩu..." class="w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
-                <button type="submit" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white py-3 rounded-xl font-bold hover:opacity-90 transition-all cursor-pointer">Đăng Ký Ngay</button>
+            <form onsubmit="handleRegister(event)">
+                <label style="display: block; font-weight: 600; font-size: 0.875rem; color: #4b5563; margin-bottom: 0.5rem;">Tên tài khoản mới</label>
+                <input type="text" id="regUser" required placeholder="Nhập tài khoản mong muốn..." class="input-style">
+                
+                <label style="display: block; font-weight: 600; font-size: 0.875rem; color: #4b5563; margin-bottom: 0.5rem;">Mật khẩu</label>
+                <input type="password" id="regPass" required placeholder="••••••••" class="input-style">
+                
+                <button type="submit" class="btn-primary">Đăng Ký Ngay</button>
             </form>
-            <p class="text-sm text-center text-gray-600 mt-6">Đã có tài khoản? <button onclick="switchPage('loginPage')" class="text-purple-600 font-bold hover:underline cursor-pointer">Đăng nhập</button></p>
+            <p style="text-align: center; margin-top: 1.5rem; font-size: 0.875rem; color: #4b5563;">Đã có tài khoản? <button onclick="switchPage('loginPage')" class="text-link">Đăng nhập</button></p>
         </div>
     </div>
 
     <!-- 🔮 GIAO DIỆN CHÍNH (DASHBOARD) -->
-    <div id="dashboardPage" class="hidden bg-slate-50 min-h-screen">
-        <nav class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100 px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-2"><span class="text-2xl">🔮</span><span class="text-xl font-black text-purple-600">MoodDiary</span></div>
-            <div class="flex items-center space-x-4">
-                <p class="text-sm font-bold text-gray-800" id="displayUsername">@user</p>
-                <button onclick="handleLogout()" class="bg-red-50 text-red-600 px-4 py-2 rounded-xl text-sm font-bold hover:bg-red-100 cursor-pointer">Đăng xuất</button>
+    <div id="dashboardPage" class="hidden" style="background-color: #f8fafc; flex: 1; width: 100%;">
+        <nav style="background: white; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+            <div style="display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.5rem;">🔮</span><span style="font-weight: 900; font-size: 1.25rem; color: #7c3aed;">MoodDiary</span></div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <p id="displayUsername" style="font-weight: bold; color: #1e293b; margin: 0;">@user</p>
+                <button onclick="handleLogout()" style="background: #fef2f2; color: #ef4444; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: bold; cursor: pointer;">Đăng xuất</button>
             </div>
         </nav>
 
-        <main class="max-w-7xl mx-auto mt-8 grid grid-cols-1 lg:grid-cols-4 gap-8 px-4 pb-12">
-            <div class="lg:col-span-3 space-y-8">
-                <!-- Form Viết Nhật Ký -->
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="text-lg font-bold text-gray-800 mb-4">✍️ Hôm nay tâm trạng của bạn thế nào?</h3>
-                    <form onsubmit="handleCabinetSubmit(event)" class="space-y-4">
-                        <input type="text" id="diaryTitle" placeholder="Tiêu đề ngày hôm nay..." required class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400">
-                        <textarea id="diaryContent" rows="4" placeholder="Hãy viết ra những suy nghĩ của bạn..." required class="w-full p-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-400"></textarea>
-                        <div class="flex flex-wrap items-center justify-between gap-4 pt-2">
-                            <select id="diaryMood" class="p-2 border border-gray-200 rounded-xl bg-gray-50 font-medium text-sm">
-                                <option>🚀 Tuyệt vời</option><option>🙂 Vui vẻ</option><option>😐 Bình thường</option><option>😢 Buồn bã</option><option>😡 Bực bội</option>
-                            </select>
-                            <div class="flex items-center space-x-6">
-                                <button type="submit" class="bg-purple-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-purple-700 cursor-pointer">Lưu Bài Viết</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- Danh sách bài viết hiển thị -->
-                <div class="space-y-4">
-                    <h3 class="text-xl font-extrabold text-gray-800">📅 Nhật ký đã lưu của bạn</h3>
-                    <div id="diaryList" class="space-y-4"></div>
-                </div>
+        <main style="max-width: 800px; margin: 2rem auto; padding: 0 1rem; box-sizing: border-box;">
+            <!-- Form Viết -->
+            <div style="background: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; margin-bottom: 2rem;">
+                <h3 style="margin-top: 0; font-size: 1.25rem; color: #1e293b; margin-bottom: 1.5rem;">✍️ Hôm nay tâm trạng của bạn thế nào?</h3>
+                <form onsubmit="handleCabinetSubmit(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <input type="text" id="diaryTitle" placeholder="Tiêu đề ngày hôm nay..." required style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; outline: none; font-size: 1rem;">
+                    <textarea id="diaryContent" rows="4" placeholder="Hãy viết ra những suy nghĩ của bạn..." required style="padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 0.5rem; outline: none; font-size: 1rem; resize: vertical;"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                        <select id="diaryMood" style="padding: 0.5rem; border-radius: 0.5rem; border: 1px solid #cbd5e1; background: #f8fafc; font-size: 0.9rem; font-weight: 500;">
+                            <option>🚀 Tuyệt vời</option><option>🙂 Vui vẻ</option><option>😐 Bình thường</option><option>😢 Buồn bã</option><option>😡 Bực bội</option>
+                        </select>
+                        <button type="submit" style="padding: 0.75rem 2rem; background: #7c3aed; color: white; border: none; border-radius: 0.5rem; font-weight: bold; cursor: pointer; box-shadow: 0 4px 6px -1px rgba(124, 58, 237, 0.3);">Lưu Nhật Ký</button>
+                    </div>
+                </form>
             </div>
-            
-            <div class="space-y-6">
-                <div class="bg-gradient-to-br from-purple-600 to-indigo-600 p-6 rounded-2xl text-white shadow-xl">
-                    <h4 class="font-bold text-lg mb-2">Trang web HTML Thuần</h4>
-                    <p class="text-xs opacity-85">Dữ liệu được lưu an toàn trực tiếp vào trình duyệt máy của bạn thông qua LocalStorage, không cần server máy chủ phức tạp!</p>
-                </div>
+
+            <!-- Danh sách hiển thị -->
+            <div>
+                <h3 style="font-size: 1.25rem; color: #1e293b; margin-bottom: 1rem;">📅 Nhật ký đã lưu của bạn</h3>
+                <div id="diaryList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
             </div>
         </main>
     </div>
 
-    <!-- ⚡ LOGIC XỬ LÝ CHUYỂN TRANG VÀ LƯU TRỮ TRÌNH DUYỆT (JAVASCRIPT) -->
+    <!-- ⚡ LOGIC CHUYỂN TRANG VÀ LƯU TRỮ LOCALSTORAGE -->
     <script>
         function switchPage(pageId) {
-            document.getElementById('loginPage').style.display = pageId === 'loginPage' ? 'flex' : 'none';
-            document.getElementById('registerPage').style.display = pageId === 'registerPage' ? 'flex' : 'none';
-            document.getElementById('dashboardPage').style.display = pageId === 'dashboardPage' ? 'block' : 'none';
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+            
+            document.getElementById(pageId).classList.remove('hidden');
+            if (pageId === 'dashboardPage') {
+                document.getElementById(pageId).style.display = 'block';
+            } else {
+                document.getElementById(pageId).style.display = 'flex';
+            }
         }
-
-        // Tự động ẩn trang ký và dashboard lúc mới vào
-        switchPage('loginPage');
 
         function handleRegister(e) {
             e.preventDefault();
@@ -119,32 +177,30 @@
         function loadDiaries() {
             const list = document.getElementById('diaryList');
             list.innerHTML = '';
-            
-            // Lấy dữ liệu nhật ký cũ từ bộ nhớ trình duyệt ra
             let diaries = JSON.parse(localStorage.getItem('myDiaries')) || [];
             
             if (diaries.length === 0) {
-                list.innerHTML = '<p class="text-gray-500 italic text-center py-4">Chưa có bài viết nào. Hãy là người đầu tiên viết nhé!</p>';
+                list.innerHTML = '<p style="color: #64748b; font-style: italic; text-align: center; padding: 2rem; background: white; border-radius: 1rem; border: 1px solid #e2e8f0;">Chưa có bài viết nào. Hãy là người đầu tiên viết nhé!</p>';
                 return;
             }
 
             diaries.forEach(d => {
-                let border = 'border-l-gray-400';
-                if (d.mood.includes('🚀') || d.mood.includes('🙂')) border = 'border-l-green-500';
-                if (d.mood.includes('😢') || d.mood.includes('😡')) border = 'border-l-red-500';
+                let borderStyle = 'border-left: 5px solid #94a3b8;';
+                if (d.mood.includes('🚀') || d.mood.includes('🙂')) borderStyle = 'border-left: 5px solid #10b981;';
+                if (d.mood.includes('😢') || d.mood.includes('😡')) borderStyle = 'border-left: 5px solid #ef4444;';
 
                 list.innerHTML += `
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 border-l-4 ${border}">
-                        <div class="flex justify-between items-start mb-2">
+                    <div style="background: white; padding: 1.5rem; border-radius: 1rem; border: 1px solid #e2e8f0; ${borderStyle} box-shadow: 0 2px 4px rgba(0,0,0,0.02);">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
                             <div>
-                                <h4 class="font-bold text-xl text-gray-800">${d.title}</h4>
-                                <p class="text-xs text-gray-400 mt-0.5">Thời gian: Vừa xong</p>
+                                <h4 style="font-weight: bold; font-size: 1.2rem; color: #1e293b; margin: 0;">${d.title}</h4>
+                                <p style="font-size: 0.75rem; color: #94a3b8; margin: 0.2rem 0 0 0;">Thời gian: Vừa xong</p>
                             </div>
-                            <span class="bg-purple-50 text-purple-700 text-xs px-3 py-1.5 rounded-full font-bold">${d.mood}</span>
+                            <span style="background: #f3e8ff; color: #6b21a8; font-size: 0.75rem; padding: 0.25rem 0.75rem; border-radius: 9999px; font-weight: bold;">${d.mood}</span>
                         </div>
-                        <p class="text-gray-600 leading-relaxed">${d.content}</p>
+                        <p style="color: #475569; line-height: 1.6; margin: 0.5rem 0; whitespace: pre-wrap;">${d.content}</p>
                     </div>`;
-            });
+                });
         }
 
         function handleCabinetSubmit(e) {
@@ -154,15 +210,11 @@
             const mood = document.getElementById('diaryMood').value;
 
             let diaries = JSON.parse(localStorage.getItem('myDiaries')) || [];
-            diaries.unshift({ title, content, mood }); // Thêm bài viết mới lên đầu
-            
-            // Lưu lại vào bộ nhớ trình duyệt
+            diaries.unshift({ title, content, mood });
             localStorage.setItem('myDiaries', JSON.stringify(diaries));
 
-            // Xóa nội dung ô nhập
             document.getElementById('diaryTitle').value = '';
             document.getElementById('diaryContent').value = '';
-            
             loadDiaries();
         }
 
