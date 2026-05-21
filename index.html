@@ -7,6 +7,10 @@
     <!-- Nhúng Font chữ hiện đại từ Google -->
     <link href="https://googleapis.com" rel="stylesheet">
     
+    <!-- NHÚNG THƯ VIỆN FIREBASE V8 BẤT TỬ - KHÔNG BỊ GITHUB PAGES CHẶN NÚT BẤM -->
+    <script src="https://gstatic.com"></script>
+    <script src="https://gstatic.com"></script>
+
     <style>
         .hidden { display: none !important; }
         
@@ -24,7 +28,6 @@
             box-sizing: border-box;
         }
 
-        /* Giao diện khung Đăng ký / Đăng nhập */
         .card-auth {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -37,7 +40,6 @@
             border: 1px solid rgba(255, 255, 255, 0.7);
             text-align: center;
             box-sizing: border-box;
-            transition: all 0.3s ease;
         }
 
         .title-gradient {
@@ -71,12 +73,6 @@
             background-color: #f8fafc;
         }
 
-        .input-style:focus {
-            border-color: #a855f7;
-            background-color: #ffffff;
-            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.15);
-        }
-
         .btn-primary {
             width: 100%;
             padding: 1rem;
@@ -98,7 +94,6 @@
             text-decoration: underline;
         }
 
-        /* Bố cục trang chủ */
         .dashboard-container {
             width: 100%;
             min-height: 100vh;
@@ -194,7 +189,7 @@
                 <h2 class="title-gradient">MoodDiary</h2>
                 <p style="color: #6b7280; font-size: 0.95rem;">Đăng nhập tài khoản mạng xã hội nhật ký</p>
             </div>
-            <form id="loginForm">
+            <form onsubmit="handleLoginSubmit(event)">
                 <label class="label-style">Tên tài khoản</label>
                 <input type="text" id="loginUser" required placeholder="Nhập tên tài khoản..." class="input-style">
                 <label class="label-style">Mật khẩu</label>
@@ -205,7 +200,7 @@
         </div>
     </div>
 
-    <!-- 📝 GIAO DIỆN ĐĂNG KÝ -->
+    <!-- 📝 GIAO DIỆN ĐĂNG KÝ (ĐÃ FIX KHÔNG BỊ KẸT NÚT) -->
     <div id="registerPage" class="hidden" style="width: 100%;">
         <div class="card-auth">
             <div style="margin-bottom: 2.5rem;">
@@ -213,7 +208,7 @@
                 <h2 class="title-gradient">Tạo Tài Khoản</h2>
                 <p style="color: #6b7280; font-size: 0.95rem;">Đăng ký để kết nối cảm xúc cùng mọi người</p>
             </div>
-            <form id="registerForm">
+            <form onsubmit="handleRegisterSubmit(event)">
                 <label class="label-style">Tên tài khoản mới</label>
                 <input type="text" id="regUser" required placeholder="Nhập tên viết liền không dấu..." class="input-style">
                 <label class="label-style">Mật khẩu bảo mật</label>
@@ -230,16 +225,15 @@
             <div style="display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.75rem;">🔮</span><span style="font-weight: 900; font-size: 1.4rem; color: #7c3aed;">MoodDiary</span></div>
             <div style="display: flex; gap: 1.25rem; align-items: center;">
                 <p id="displayUsername" style="font-weight: 700; color: #1e293b; margin: 0; background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 9999px;">@user</p>
-                <button id="logoutBtn" style="background: #fef2f2; color: #ef4444; border: none; padding: 0.6rem 1.25rem; border-radius: 0.75rem; font-weight: 700; cursor: pointer;">Đăng xuất</button>
+                <button onclick="handleLogout()" style="background: #fef2f2; color: #ef4444; border: none; padding: 0.6rem 1.25rem; border-radius: 0.75rem; font-weight: 700; cursor: pointer;">Đăng xuất</button>
             </div>
         </nav>
 
         <div class="grid-layout">
-            <!-- Cột trái: Tạo và Xem nhật ký -->
             <div>
                 <div class="form-diary">
                     <h3 style="margin-top: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; margin-bottom: 1.25rem;">✍️ Hôm nay tâm trạng của bạn thế nào?</h3>
-                    <form id="diaryForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                    <form onsubmit="handleCabinetSubmit(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
                         <input type="text" id="diaryTitle" placeholder="Tiêu đề câu chuyện ngày hôm nay..." required style="padding: 0.85rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; outline: none; font-size: 1rem;">
                         <textarea id="diaryContent" rows="4" placeholder="Hãy lan tỏa câu chuyện hoặc trút bỏ tâm sự..." required style="padding: 0.85rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; outline: none; resize: vertical; font-family: inherit; font-size: 1rem;"></textarea>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -252,28 +246,23 @@
                 </div>
 
                 <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
-                    <button id="tabAll" class="tab-btn tab-active">🌐 Toàn xã hội</button>
-                    <button id="tabFriends" class="tab-btn">👥 Chỉ bạn bè</button>
+                    <button id="tabAll" onclick="switchTimeline('all')" class="tab-btn tab-active">🌐 Toàn xã hội</button>
+                    <button id="tabFriends" onclick="switchTimeline('friends')" class="tab-btn">👥 Chỉ bạn bè</button>
                 </div>
 
                 <div id="diaryList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
             </div>
 
-            <!-- Cột phải: Khung bạn bè và Tìm kiếm -->
             <div class="sidebar-card" style="height: fit-content;">
                 <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">👥 Tìm kiếm & Bạn bè</h3>
-                <input type="text" id="searchUser" placeholder="Gõ tên tìm bạn bè..." style="width: 100%; padding: 0.5rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; outline: none; margin-bottom: 1rem; font-size: 0.9rem;">
+                <input type="text" id="searchUser" oninput="loadUsers()" placeholder="Gõ tên tìm bạn bè..." style="width: 100%; padding: 0.5rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; outline: none; margin-bottom: 1rem; font-size: 0.9rem;">
                 <div id="userList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <!-- ⚡ BỘ KHỞI CHẠY LIÊN KẾT LIÊN THÔNG DATABASE SHOPCUTTAY -->
-    <script type="module">
-        import { initializeApp } from "https://gstatic.com";
-        import { getDatabase, ref, set, get, child, update, push, onValue } from "https://gstatic.com";
-
-        // Gắn cấu hình máy chủ shopcuttay của bạn
+    <!-- ⚡ SỬ DỤNG CÚ PHÁP FIREBASE V8 KHÔNG BỊ GITHUB PAGES CHẶN NÚT BẤM -->
+    <script>
         const firebaseConfig = {
             apiKey: "AIzaSyAOcavYOsOGgRnmfPKeojppLoP6hPYe6pI",
             authDomain: "://firebaseapp.com",
@@ -284,24 +273,29 @@
             appId: "1:275809822981:web:02e33ad2515eed78b32f6c"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
+        // Khởi tạo Firebase cấu hình cũ mượt mà hơn
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
 
         let currentUser = localStorage.getItem("diary_user") || null;
         let currentTab = "all";
+        let cacheData = { users: {}, diaries: {}, friends: {} };
 
-        window.switchPage = function(pageId) {
-            document.getElementById('loginPage').style.display = pageId === 'loginPage' ? 'flex' : 'none';
-            document.getElementById('registerPage').style.display = pageId === 'registerPage' ? 'flex' : 'none';
-            document.getElementById('dashboardPage').style.display = pageId === 'dashboardPage' ? 'block' : 'none';
+        function switchPage(pageId) {
+            document.getElementById('loginPage').classList.add('hidden');
+            document.getElementById('registerPage').classList.add('hidden');
+            document.getElementById('dashboardPage').classList.add('hidden');
+            
+            document.getElementById(pageId).classList.remove('hidden');
             if (pageId === 'dashboardPage') {
+                document.getElementById(pageId).style.display = 'block';
                 document.body.style.justifyContent = 'flex-start';
             } else {
+                document.getElementById(pageId).style.display = 'flex';
                 document.body.style.justifyContent = 'center';
             }
         }
 
-        // Tự động kiểm tra giữ trạng thái đăng nhập
         if (currentUser) {
             document.getElementById('displayUsername').innerText = "@" + currentUser;
             switchPage('dashboardPage');
@@ -310,37 +304,37 @@
             switchPage('loginPage');
         }
 
-        // ĐĂNG KÝ
-        document.getElementById('registerForm').onsubmit = async function(e) {
+        // XỬ LÝ ĐĂNG KÝ BẤT TỬ - BẤM PHÁT ĂN NGAY
+        async function handleRegisterSubmit(e) {
             e.preventDefault();
             const user = document.getElementById('regUser').value.trim().toLowerCase();
             const pass = document.getElementById('regPass').value;
 
             if(!user || !pass) return alert("Vui lòng điền đủ thông tin!");
-            if(user.includes(' ') || user.length < 3) return alert("Tên viết liền không dấu, dài từ 3 ký tự!");
+            if(user.includes(' ') || user.length < 3) return alert("Tên viết liền không dấu, từ 3 ký tự!");
 
             try {
-                const snapshot = await get(child(ref(db), `users/${user}`));
+                const snapshot = await db.ref(`users/${user}`).once('value');
                 if (snapshot.exists()) {
                     alert("Tên tài khoản này đã tồn tại!");
                 } else {
-                    await set(ref(db, `users/${user}`), { password: pass });
-                    alert("🎉 Tạo tài khoản mạng xã hội thành công vĩnh viễn!");
+                    await db.ref(`users/${user}`).set({ password: pass });
+                    alert("🎉 Tạo tài khoản mạng xã hội thành công!");
                     switchPage('loginPage');
                 }
             } catch (error) {
-                alert("Lỗi kết nối Firebase Rules. Đảm bảo bạn đã bấm Publish Rules thành công.");
+                alert("Lỗi Firebase: " + error.message);
             }
-        };
+        }
 
-        // ĐĂNG NHẬP
-        document.getElementById('loginForm').onsubmit = async function(e) {
+        // XỬ LÝ ĐĂNG NHẬP
+        async function handleLoginSubmit(e) {
             e.preventDefault();
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value;
 
             try {
-                const snapshot = await get(child(ref(db), `users/${user}`));
+                const snapshot = await db.ref(`users/${user}`).once('value');
                 if (snapshot.exists() && snapshot.val().password === pass) {
                     currentUser = user;
                     localStorage.setItem("diary_user", user);
@@ -348,23 +342,23 @@
                     switchPage('dashboardPage');
                     startListening();
                 } else {
-                    alert("❌ Tài khoản hoặc mật khẩu không chính xác!");
+                    alert("❌ Sai tài khoản hoặc mật khẩu!");
                 }
             } catch (error) {
-                alert("Lỗi xác thực dữ liệu máy chủ.");
+                alert("Lỗi đăng nhập: " + error.message);
             }
-        };
+        }
 
-        // ĐĂNG BÀI VIẾT
-        document.getElementById('diaryForm').onsubmit = async function(e) {
+        // XỬ LÝ ĐĂNG BÀI VIẾT
+        async function handleCabinetSubmit(e) {
             e.preventDefault();
             const title = document.getElementById('diaryTitle').value.trim();
             const content = document.getElementById('diaryContent').value.trim();
             const mood = document.getElementById('diaryMood').value;
 
             try {
-                const newDiaryRef = push(ref(db, 'diaries'));
-                await set(newDiaryRef, {
+                const newDiaryRef = db.ref('diaries').push();
+                await newDiaryRef.set({
                     id: newDiaryRef.key,
                     title: title,
                     content: content,
@@ -375,27 +369,25 @@
                 document.getElementById('diaryTitle').value = '';
                 document.getElementById('diaryContent').value = '';
             } catch (error) {
-                alert("Không lưu được bài viết lên đám mây.");
+                alert("Lỗi đăng bài: " + error.message);
             }
-        };
+        }
 
-        // KHỐI LẮNG NGHE ĐỒNG BỘ LIÊN THÔNG TOÀN MẠNG REALTIME
+        // KẾT NỐI REALTIME ĐỒNG BỘ 2 MÁY THỜI GIAN THỰC
         function startListening() {
-            onValue(ref(db), (snapshot) => {
-                const data = snapshot.val() || {};
-                const users = data.users || {};
-                const diaries = data.diaries || {};
-                const friends = data.friends || {};
-
-                renderDiaries(diaries, friends);
-                renderUsers(users, friends);
+            db.ref().on('value', (snapshot) => {
+                cacheData = snapshot.val() || {};
+                renderDiaries();
+                loadUsers();
             });
         }
 
-        // HIỂN THỊ NHẬT KÝ
-        function renderDiaries(diariesObj, friendsObj) {
+        function renderDiaries() {
             const list = document.getElementById('diaryList');
             list.innerHTML = '';
+
+            const diariesObj = cacheData.diaries || {};
+            const friendsObj = cacheData.friends || {};
 
             const diariesArray = Object.values(diariesObj).reverse();
             let myFriends = friendsObj[currentUser] ? Object.keys(friendsObj[currentUser]) : [];
@@ -422,7 +414,7 @@
                         </div>
                         <p style="color: #475569; line-height: 1.6; margin: 1.25rem 0; white-space: pre-wrap; font-size: 0.975rem;">${d.content}</p>
                         <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;">
-                            <button onclick="window.likePost('${d.id}', ${d.likes || 0})" class="btn-like">
+                            <button onclick="likePost('${d.id}', ${d.likes || 0})" class="btn-like">
                                 ❤️ Thích (${d.likes || 0})
                             </button>
                         </div>
@@ -430,15 +422,17 @@
             });
 
             if (count === 0 && currentTab === "friends") {
-                list.innerHTML = '<p style="color: #64748b; text-align: center; font-style: italic; padding: 2rem; background: white; border-radius: 1rem;">👥 Bạn bè của bạn chưa đăng nhật ký nào cả!</p>';
+                list.innerHTML = '<p style="color: #64748b; text-align: center; font-style: italic; padding: 2rem; background: white; border-radius: 1rem;">👥 Bạn bè chưa đăng nhật ký nào cả!</p>';
             }
         }
 
-        // TÌM KIẾM VÀ HIỂN THỊ DANH SÁCH BẠN BÈ
-        function renderUsers(usersObj, friendsObj) {
+        function loadUsers() {
             const container = document.getElementById('userList');
             const keyword = document.getElementById('searchUser').value.trim().toLowerCase();
             container.innerHTML = '';
+
+            const usersObj = cacheData.users || {};
+            const friendsObj = cacheData.friends || {};
 
             let myFriends = friendsObj[currentUser] ? Object.keys(friendsObj[currentUser]) : [];
             let hasUser = false;
@@ -455,7 +449,7 @@
                 container.innerHTML += `
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px dashed #f1f5f9;">
                         <span style="font-weight: 600; font-size: 0.95rem; color: #334155;">@${user}</span>
-                        <button onclick="window.toggleFriend('${user}', ${isFriend})" class="btn-friend" style="${btnStyle}">${btnText}</button>
+                        <button onclick="toggleFriend('${user}', ${isFriend})" class="btn-friend" style="${btnStyle}">${btnText}</button>
                     </div>`;
             });
 
@@ -464,49 +458,32 @@
             }
         }
 
-        // THẢ TIM
-        window.likePost = async function(diaryId, currentLikes) {
-            const updates = {};
-            updates[`/diaries/${diaryId}/likes`] = currentLikes + 1;
-            await update(ref(db), updates);
-        };
+        async function likePost(diaryId, currentLikes) {
+            await db.ref(`diaries/${diaryId}`).update({ likes: currentLikes + 1 });
+        }
 
-        // KẾT BẠN HAI CHIỀU KHÔNG LỎ
-        window.toggleFriend = async function(targetUser, isFriend) {
+        async function toggleFriend(targetUser, isFriend) {
             if (isFriend) {
-                await set(ref(db, `friends/${currentUser}/${targetUser}`), null);
-                await set(ref(db, `friends/${targetUser}/${currentUser}`), null);
+                await db.ref(`friends/${currentUser}/${targetUser}`).remove();
+                await db.ref(`friends/${targetUser}/${currentUser}`).remove();
             } else {
-                await set(ref(db, `friends/${currentUser}/${targetUser}`), true);
-                await set(ref(db, `friends/${targetUser}/${currentUser}`), true);
+                await db.ref(`friends/${currentUser}/${targetUser}`).set(true);
+                await db.ref(`friends/${targetUser}/${currentUser}`).set(true);
             }
-        };
+        }
 
-        window.switchTimeline = function(tab) {
+        function switchTimeline(tab) {
             currentTab = tab;
             document.getElementById('tabAll').className = "tab-btn " + (tab === 'all' ? 'tab-active' : '');
             document.getElementById('tabFriends').className = "tab-btn " + (tab === 'friends' ? 'tab-active' : '');
-            get(ref(db)).then((snapshot) => {
-                const data = snapshot.val() || {};
-                renderDiaries(data.diaries || {}, data.friends || {});
-            });
+            renderDiaries();
         }
 
-        document.getElementById('tabAll').onclick = () => window.switchTimeline('all');
-        document.getElementById('tabFriends').onclick = () => window.switchTimeline('friends');
-        
-        document.getElementById('searchUser').oninput = () => {
-            get(ref(db)).then((snapshot) => {
-                const data = snapshot.val() || {};
-                renderUsers(data.users || {}, data.friends || {});
-            });
-        };
-
-        document.getElementById('logoutBtn').onclick = function() {
+        function handleLogout() {
             currentUser = null;
             localStorage.removeItem("diary_user");
             switchPage('loginPage');
-        };
+        }
     </script>
 </body>
 </html>
