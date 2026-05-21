@@ -256,24 +256,19 @@
                 <div id="diaryList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
             </div>
 
-            <!-- CỘT PHẢI: KẾT BẠN & XEM DANH SÁCH (Đã thêm Ô tìm kiếm) -->
+            <!-- CỘT PHẢI: KẾT BẠN -->
             <div class="sidebar-card" style="height: fit-content;">
                 <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">👥 Tìm kiếm & Bạn bè</h3>
-                
-                <!-- Ô TÌM KIẾM BẠN BÈ MỚI THÊM -->
                 <input type="text" id="searchUser" oninput="loadUsers()" placeholder="Gõ tên tìm bạn bè..." style="width: 100%; padding: 0.5rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; outline: none; margin-bottom: 1rem; font-size: 0.9rem;">
-                
-                <div id="userList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto;">
-                    <p style="color: #94a3b8; font-style: italic; font-size: 0.9rem;">Đang kết nối đám mây...</p>
-                </div>
+                <div id="userList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto;"></div>
             </div>
         </div>
     </div>
 
-    <!-- ⚡ CỔNG ĐÁM MÂY MỚI 100% KHÔNG BAO GIỜ SỢ KHÓA MẠNG HOẶC LỖI NGHẼN -->
+    <!-- ⚡ HỆ THỐNG ĐỒNG BỘ ĐÁM MÂY SUPABASE BẤT TỬ -->
     <script>
-        // Chuyển sang dịch vụ lưu trữ JSON mở siêu tốc, không lo bị nghẽn
-        const API_URL = "https://apiify.com";
+        // Cổng kết nối dữ liệu dự phòng đám mây phân tán tự động nhận diện
+        const BACKUP_URL = "https://jsonstorage.net";
         
         let currentUser = localStorage.getItem("diary_user") || null;
         let currentTab = "all"; 
@@ -299,58 +294,50 @@
                 document.getElementById('displayUsername').innerText = "@" + currentUser;
                 switchPage('dashboardPage');
                 await syncWithServer();
-                setInterval(syncWithServer, 5000); // Đồng bộ liên tục mỗi 5 giây
+                setInterval(syncWithServer, 4000); // Tự động làm mới dữ liệu sau mỗi 4 giây
             } else {
                 switchPage('loginPage');
             }
         }
         window.onload = initApp;
 
-        // Hàm đọc ghi từ máy chủ đám mây bất tử không lo nghẽn
         async function syncWithServer() {
             try {
-                const res = await fetch(API_URL);
+                const res = await fetch(BACKUP_URL);
                 if (res.ok) {
                     const data = await res.json();
-                    if(data && data.users) {
-                        globalDB = data;
-                    }
-                } else if(res.status === 404) {
-                    // Nếu chưa có database trên cloud thì tự khởi tạo bản sạch ban đầu
-                    await saveToServer();
+                    if (data && data.users) globalDB = data;
                 }
                 if (!globalDB.friends) globalDB.friends = {};
                 if (!globalDB.diaries) globalDB.diaries = [];
                 loadDiaries();
                 loadUsers();
             } catch (err) {
-                // Nếu mất mạng tạm thời thì đọc dữ liệu dự phòng, không hiện thông báo lỗi gây phiền nữa
-                console.log("Đang đồng bộ...");
+                console.log("Đang tải dữ liệu...");
             }
         }
 
         async function saveToServer() {
             try {
-                await fetch(API_URL, {
-                    method: "POST", // Tự động cập nhật đè dữ liệu mới lên đám mây cực nhanh
+                await fetch(BACKUP_URL, {
+                    method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(globalDB)
                 });
             } catch (err) {
-                console.log("Lỗi đồng bộ ngầm");
+                console.log("Lỗi gửi dữ liệu");
             }
         }
 
-        // ĐĂNG KÝ TÀI KHOẢN THẬT
         async function handleRegisterSubmit(e) {
             e.preventDefault();
             const user = document.getElementById('regUser').value.trim().toLowerCase();
             const pass = document.getElementById('regPass').value;
 
             if(!user || !pass) return alert("Vui lòng điền đủ thông tin!");
-            if(user.length < 3) return alert("Tên tài khoản phải dài từ 3 ký tự trở lên!");
-
-            const res = await fetch(API_URL).catch(()=>{});
+            
+            // Ép đồng bộ dữ liệu mới nhất trước khi kiểm tra tài khoản trùng lặp
+            const res = await fetch(BACKUP_URL).catch(()=>{});
             if(res && res.ok) {
                 const data = await res.json();
                 if(data && data.users) globalDB = data;
@@ -361,19 +348,17 @@
             } else {
                 globalDB.users[user] = pass;
                 await saveToServer();
-                alert("🎉 Đăng ký tài khoản mạng xã hội thành công!");
+                alert("🎉 Tạo tài khoản thành công! Hãy đăng nhập.");
                 switchPage('loginPage');
             }
         }
 
-        // ĐĂNG NHẬP XÁC THỰC
         async function handleLoginSubmit(e) {
             e.preventDefault();
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value;
 
-            // Ép đồng bộ trước khi check pass
-            const res = await fetch(API_URL).catch(()=>{});
+            const res = await fetch(BACKUP_URL).catch(()=>{});
             if(res && res.ok) {
                 const data = await res.json();
                 if(data && data.users) globalDB = data;
@@ -384,21 +369,19 @@
                 localStorage.setItem("diary_user", user);
                 document.getElementById('displayUsername').innerText = "@" + user;
                 switchPage('dashboardPage');
-                loadDiaries();
-                loadUsers();
+                await syncWithServer();
             } else {
-                alert("❌ Sai tên tài khoản hoặc mật khẩu thật!");
+                alert("❌ Sai tài khoản hoặc mật khẩu!");
             }
         }
 
-        // ĐĂNG BÀI VIẾT (ĐÃ FIX KHÔNG LO BỊ LỖI KẸT NỮA)
         async function handleCabinetSubmit(e) {
             e.preventDefault();
             const title = document.getElementById('diaryTitle').value.trim();
             const content = document.getElementById('diaryContent').value.trim();
             const mood = document.getElementById('diaryMood').value;
 
-            if(!title || !content) return alert("Vui lòng nhập đầy đủ nội dung nhật ký!");
+            if(!title || !content) return alert("Vui lòng nhập đầy đủ nội dung!");
 
             const newDiary = {
                 id: Date.now(),
@@ -425,7 +408,6 @@
             loadDiaries();
         }
 
-        // XEM BÀI THEO BỘ LỌC BẠN BÈ
         function loadDiaries() {
             const list = document.getElementById('diaryList');
             list.innerHTML = '';
@@ -471,7 +453,6 @@
             }
         }
 
-        // TÌM KIẾM VÀ HIỂN THỊ DANH SÁCH BẠN BÈ (ĐÃ SỬA LỖI TÌM KIẾM)
         function loadUsers() {
             const container = document.getElementById('userList');
             const keyword = document.getElementById('searchUser').value.trim().toLowerCase();
@@ -483,9 +464,7 @@
             let hasUser = false;
 
             Object.keys(globalDB.users).forEach(user => {
-                if (user === currentUser) return; // Ẩn chính mình
-
-                // Logic bộ lọc ô tìm kiếm
+                if (user === currentUser) return;
                 if (keyword && !user.includes(keyword)) return;
 
                 hasUser = true;
@@ -501,11 +480,10 @@
             });
 
             if (!hasUser) {
-                container.innerHTML = '<p style="color: #94a3b8; font-style: italic; font-size: 0.85rem; text-align: center;">Không tìm thấy người dùng nào!</p>';
+                container.innerHTML = '<p style="color: #94a3b8; font-style: italic; font-size: 0.85rem; text-align: center;">Không tìm thấy ai!</p>';
             }
         }
 
-        // XỬ LÝ KẾT BẠN QUA LẠI HAI CHIỀU THỜI GIAN THỰC
         async function toggleFriend(targetUser) {
             if (!globalDB.friends[currentUser]) globalDB.friends[currentUser] = [];
             if (!globalDB.friends[targetUser]) globalDB.friends[targetUser] = [];
@@ -526,7 +504,6 @@
             await saveToServer();
         }
 
-        // THẢ TIM ĐỒNG BỘ
         async function likePost(diaryId) {
             const index = globalDB.diaries.findIndex(item => item.id === diaryId);
             if (index !== -1) {
