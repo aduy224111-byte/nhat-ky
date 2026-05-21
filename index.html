@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 Nhật Ký Toàn Cầu - Mạng Xã Hội Nhật Ký</title>
+    <title>🔮 Nhật Ký Toàn Cầu - Bản Sửa Lỗi Nút Bấm</title>
     <link href="https://googleapis.com" rel="stylesheet">
     
-    <!-- Bộ thư viện Firebase V8 chuẩn chạy mượt trên GitHub Pages -->
+    <!-- Bộ thư viện Firebase V8 kết nối an toàn bảo mật cao -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
@@ -31,7 +31,6 @@
             overflow-x: hidden;
         }
 
-        /* GIAO DIỆN KHUNG ĐĂNG NHẬP CĂN GIỮA TUYỆT ĐỐI THEO PHONG CÁCH APP CAO CẤP */
         .auth-wrapper {
             display: flex; align-items: center; justify-content: center;
             width: 100%; min-height: 100vh; padding: 1rem;
@@ -64,8 +63,9 @@
             text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35); }
+        .btn-primary:disabled { background: #94a3b8 !important; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* BẢNG THÔNG BÁO POP-UP BIẾN TẤU SIÊU ĐẸP MÊ LY */
+        /* Bảng thông báo độc quyền siêu đẹp */
         .toast-box {
             position: fixed; top: 2rem; left: 50%; transform: translateX(-50%) translateY(-20px);
             background: rgba(15, 23, 42, 0.9); color: white; padding: 1rem 2rem;
@@ -75,7 +75,6 @@
         }
         .toast-box.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-        /* Giao Diện Trang Chủ Nhật Ký */
         .dashboard-container { width: 100%; min-height: 100vh; background: #f8fafc; display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; }
         
         nav {
@@ -112,10 +111,10 @@
 </head>
 <body>
 
-    <!-- 🔔 HỘP THÔNG BÁO ĐỘC QUYỀN ĐẸP MÊ LY -->
+    <!-- 🔔 TOAST POP-UP THÔNG BÁO SIÊU ĐẸP -->
     <div id="customToast" class="toast-box">✨ <span id="toastMessage">Thông báo</span></div>
 
-    <!-- 🔑 GIAO DIỆN ĐĂNG NHẬP CĂN GIỮA TUYỆT ĐỐI -->
+    <!-- 🔑 GIAO DIỆN ĐĂNG NHẬP (ĐÃ KHẮC PHỤC ID NÚT BẤM) -->
     <div id="loginPage" class="auth-wrapper">
         <div class="card-auth">
             <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">🔮</span>
@@ -124,13 +123,13 @@
             <form onsubmit="handleLogin(event)">
                 <input type="text" id="loginUser" autocomplete="username" required placeholder="Tên tài khoản..." class="input-style">
                 <input type="password" id="loginPass" autocomplete="current-password" required placeholder="Mật khẩu của bạn..." class="input-style">
-                <button type="submit" class="btn-primary">Đăng Nhập</button>
+                <button type="submit" id="loginBtn" class="btn-primary">Đăng Nhập</button>
             </form>
             <p style="margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">Chưa có tài khoản? <button onclick="switchPage('registerPage')" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline;">Tạo tài khoản mới</button></p>
         </div>
     </div>
 
-    <!-- 📝 GIAO DIỆN ĐĂNG KÝ CĂN GIỮA TUYỆT ĐỐI -->
+    <!-- 📝 GIAO DIỆN ĐĂNG KÝ (ĐÃ KHẮC PHỤC ID NÚT BẤM) -->
     <div id="registerPage" class="auth-wrapper hidden">
         <div class="card-auth">
             <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">📝</span>
@@ -139,7 +138,7 @@
             <form onsubmit="handleRegister(event)">
                 <input type="text" id="regUser" required placeholder="Tên tài khoản viết liền..." class="input-style">
                 <input type="password" id="regPass" required placeholder="Mật khẩu từ 4 ký tự..." class="input-style">
-                <button type="submit" class="btn-primary">Đăng Ký Tài Khoản</button>
+                <button type="submit" id="regBtn" class="btn-primary">Đăng Ký Tài Khoản</button>
             </form>
             <p style="margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">Đã có tài khoản rồi? <button onclick="switchPage('loginPage')" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline;">Quay lại đăng nhập</button></p>
         </div>
@@ -185,7 +184,7 @@
         </div>
     </div>
 
-    <!-- 👤 MODAL XEM TRANG CÁ NHÂN -->
+    <!-- 👤 MODAL TRANG CÁ NHÂN -->
     <div id="profileModal" class="modal hidden">
         <div class="modal-content">
             <button class="close-btn" onclick="closeProfile()">✕</button>
@@ -200,7 +199,7 @@
         </div>
     </div>
 
-    <!-- ================= HỆ THỐNG PHÊ DUYỆT 2 GIÂY SIÊU TỐC KHÔNG TREO NÚT ================= -->
+    <!-- ================= LOGIC ĐÃ FIX TOÀN DIỆN LỖI ID NÚT BẤM ================= -->
     <script>
         const firebaseConfig = {
             databaseURL: "https://firebasedatabase.app"
@@ -217,7 +216,6 @@
             if (currentUser) { showDashboard(); } else { switchPage('loginPage'); }
         };
 
-        // HÀM HIỂN THỊ THÔNG BÁO KIỂU MỚI ĐẸP MÊ LY 
         function showToast(msg) {
             const toast = document.getElementById('customToast');
             document.getElementById('toastMessage').innerText = msg;
@@ -230,58 +228,72 @@
             document.getElementById('registerPage').classList.add('hidden');
             document.getElementById('dashboardPage').classList.add('hidden');
             document.getElementById(id).classList.remove('hidden');
+            
+            if(id === 'dashboardPage') {
+                document.body.style.alignItems = 'stretch'; document.body.style.justifyContent = 'flex-start';
+            } else {
+                document.body.style.alignItems = 'center'; document.body.style.justifyContent = 'center';
+            }
         }
 
-        // TẠO TÀI KHOẢN SIÊU TỐC TRONG 1 GIÂY BẰNG CƠ CHẾ ĐỆM MÁY CỤC BỘ (LOCAL FALLBACK)
+        // ĐÃ KHẮC PHỤC: Đồng bộ mượt mà không làm kẹt vô hiệu hóa phần cứng nút bấm
         function handleRegister(e) {
             e.preventDefault();
+            const btn = document.getElementById('regBtn');
             const user = document.getElementById('regUser').value.trim().toLowerCase().replace(/[^a-zA-Z0-9_]/g, '');
             const pass = document.getElementById('regPass').value;
 
-            if(user.length < 3 || pass.length < 4) { showToast('Tên tài khoản tối thiểu 3 ký tự, mật khẩu từ 4 ký tự!'); return; }
+            if(user.length < 3 || pass.length < 4) { showToast('Tên đăng nhập từ 3 ký tự, mật khẩu từ 4 ký tự!'); return; }
 
-            // 1. Phê duyệt cục bộ tức thì trong 0.1 giây để Duy không phải chờ mạng treo
-            currentUser = user;
-            localStorage.setItem('online_diary_user', currentUser);
-            showToast('🎉 Đăng ký siêu tốc thành công!');
-            
-            // Vào thẳng Dashboard luôn sau 1 giây
-            setTimeout(() => { showDashboard(); }, 1000);
+            if(btn) { btn.disabled = true; btn.innerText = "Đang kết nối Cloud..."; }
 
-            // 2. Chạy ngầm đẩy dữ liệu đồng bộ lên Firebase (Duy không bị kẹt màn hình)
-            db.ref('users/' + user).set({ password: pass, username: user });
+            db.ref('users/' + user).once('value', snapshot => {
+                if(btn) { btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản"; }
+                
+                if(snapshot.exists()) {
+                    showToast('❌ Tên tài khoản này đã tồn tại!');
+                } else {
+                    db.ref('users/' + user).set({ password: pass, username: user }, error => {
+                        if(!error) {
+                            showToast('🎉 Đăng ký thành công! Đang chuyển hướng...');
+                            document.getElementById('regUser').value = '';
+                            document.getElementById('regPass').value = '';
+                            currentUser = user;
+                            localStorage.setItem('online_diary_user', currentUser);
+                            setTimeout(() => { showDashboard(); }, 1200);
+                        } else {
+                            showToast('Lỗi lưu trữ! Kiểm tra quyền Rules trên Firebase.');
+                        }
+                    });
+                }
+            }, err => {
+                if(btn) { btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản"; }
+                showToast('Lỗi kết nối Firebase!');
+            });
         }
 
-        // ĐĂNG NHẬP SIÊU TỐC TRONG 1 GIÂY
         function handleLogin(e) {
             e.preventDefault();
+            const btn = document.getElementById('loginBtn');
             const user = document.getElementById('loginUser').value.trim().toLowerCase();
             const pass = document.getElementById('loginPass').value;
 
-            // Cơ chế nhận diện thông minh: Kiểm tra cache cục bộ trước để phê duyệt trong 1 giây
-            if(globalUsersCache[user] && globalUsersCache[user].password === pass) {
-                currentUser = user;
-                localStorage.setItem('online_diary_user', currentUser);
-                showToast('🔑 Đăng nhập thành công!');
-                setTimeout(() => { showDashboard(); }, 1000);
-                return;
-            }
+            if(btn) { btn.disabled = true; btn.innerText = "Đang xác thực..."; }
 
-            // Nếu chưa có cache, gửi yêu cầu gọn nhẹ lên Cloud
             db.ref('users/' + user).once('value', snapshot => {
+                if(btn) { btn.disabled = false; btn.innerText = "Đăng Nhập"; }
+                
                 if(snapshot.exists() && snapshot.val().password === pass) {
                     currentUser = user;
                     localStorage.setItem('online_diary_user', currentUser);
                     showToast('🔑 Đăng nhập thành công!');
-                    setTimeout(() => { showDashboard(); }, 1000);
+                    setTimeout(() => { showDashboard(); }, 1200);
                 } else {
                     showToast('❌ Sai tên tài khoản hoặc mật khẩu!');
                 }
             }, err => {
-                // Fallback cứu cánh: Cho phép duyệt offline nếu mạng cáp quang bị nghẽn hoàn toàn
-                currentUser = user;
-                localStorage.setItem('online_diary_user', currentUser);
-                showDashboard();
+                if(btn) { btn.disabled = false; btn.innerText = "Đăng Nhập"; }
+                showToast('Lỗi kết nối Cloud!');
             });
         }
 
@@ -321,7 +333,7 @@
                 likesCount: 0
             });
             document.getElementById('diaryContent').value = '';
-            showToast('📝 Đã đăng bài viết nhật ký!');
+            showToast('📝 Đã viết trang nhật ký mới!');
         }
 
         function toggleLike(diaryId) {
@@ -342,7 +354,7 @@
         function renderAllDiaries(data) {
             const feed = document.getElementById('allDiariesFeed');
             feed.innerHTML = '';
-            if(!data) { feed.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:2.5rem;">Mọi người chưa viết bài nhật ký trực tuyến nào.</p>'; return; }
+            if(!data) { feed.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:2.5rem;">Chưa có bài nhật ký nào được viết.</p>'; return; }
 
             const list = Object.values(data).sort((a,b) => b.timestamp - a.timestamp);
             list.forEach(item => {
@@ -408,11 +420,11 @@
             actionArea.innerHTML = '';
 
             if(username === currentUser) {
-                document.getElementById('profileStatus').innerText = "✨ Không gian nhật ký cá nhân của bạn";
-                document.getElementById('profileFeedTitle').innerText = "📝 Tất cả các bài viết bạn đã đăng:";
+                document.getElementById('profileStatus').innerText = "✨ Không gian cá nhân của bạn";
+                document.getElementById('profileFeedTitle').innerText = "📝 Các bài viết bạn đã lưu trữ:";
             } else {
-                document.getElementById('profileStatus').innerText = `👋 Ghé thăm trang nhật ký cá nhân của @${username}`;
-                document.getElementById('profileFeedTitle').innerText = `📝 Các bài nhật ký của @${username}:`;
+                document.getElementById('profileStatus').innerText = `👋 Xem tường trang cá nhân của @${username}`;
+                document.getElementById('profileFeedTitle').innerText = `📝 Nhật ký của @${username}:`;
                 
                 const isFriend = globalFriendsList.includes(username);
                 const btn = document.createElement('button');
