@@ -3,180 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🔮 MoodDiary - Mạng Xã Hội Nhật Ký & Kết Bạn</title>
-    <!-- Nhúng Font chữ hiện đại từ Google -->
+    <title>🔮 Nhật Ký Online - Bản Đồng Bộ Toàn Cầu</title>
     <link href="https://googleapis.com" rel="stylesheet">
     
-    <!-- NHÚNG THƯ VIỆN FIREBASE V8 BẤT TỬ - KHÔNG BỊ GITHUB PAGES CHẶN NÚT BẤM -->
-    <script src="https://gstatic.com"></script>
-    <script src="https://gstatic.com"></script>
-
     <style>
+        :root {
+            --primary: #7c3aed;
+            --primary-light: #a78bfa;
+            --secondary: #db2777;
+            --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #fce7f3 100%);
+            --glass: rgba(255, 255, 255, 0.8);
+            --border: rgba(255, 255, 255, 0.5);
+        }
+
         .hidden { display: none !important; }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
         
         body {
-            background: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #fce7f3 100%) !important;
-            background-color: #f3e8ff !important;
-            font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
+            background: var(--bg-gradient) !important;
+            margin: 0; padding: 0; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
         .card-auth {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 3rem 2.5rem;
-            border-radius: 2rem;
-            width: 90%;
-            max-w: 420px;
-            margin: auto;
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 3rem 2.5rem; border-radius: 2rem; width: 90%; max-width: 420px;
             box-shadow: 0 25px 60px -15px rgba(124, 58, 237, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.7);
-            text-align: center;
-            box-sizing: border-box;
+            border: 1px solid var(--border); text-align: center;
         }
 
         .title-gradient {
-            font-size: 2.2rem;
-            font-weight: 800;
-            background: linear-gradient(to right, #7c3aed, #db2777);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin: 0.5rem 0;
-        }
-
-        .label-style {
-            display: block;
-            font-weight: 700;
-            font-size: 0.85rem;
-            color: #4b5563;
-            margin-bottom: 0.5rem;
-            text-align: left;
-            text-transform: uppercase;
+            font-size: 2.3rem; font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0.5rem 0;
         }
 
         .input-style {
-            width: 100%;
-            padding: 0.9rem 1.25rem;
-            border: 2px solid #e2e8f0;
-            border-radius: 1rem;
-            margin-bottom: 1.5rem;
-            box-sizing: border-box;
-            outline: none;
-            font-size: 1rem;
-            background-color: #f8fafc;
+            width: 100%; padding: 0.9rem 1.25rem; border: 2px solid #e2e8f0;
+            border-radius: 1rem; margin-bottom: 1.25rem; outline: none; font-size: 1rem;
+            background: rgba(255, 255, 255, 0.6); color: #1e293b; font-weight: 500;
         }
+        .input-style:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
 
         .btn-primary {
-            width: 100%;
-            padding: 1rem;
-            background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%) !important;
-            color: white !important;
-            border: none;
-            border-radius: 1rem;
-            font-weight: 800;
-            cursor: pointer;
-            text-transform: uppercase;
+            width: 100%; padding: 1rem;
+            background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
+            color: white; border: none; border-radius: 1rem; font-weight: 800; cursor: pointer;
+            text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
         }
+        .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35); }
 
-        .text-link {
-            color: #7c3aed;
-            font-weight: 700;
-            background: none;
-            border: none;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        .dashboard-container {
-            width: 100%;
-            min-height: 100vh;
-            background-color: #f8fafc;
-            display: flex;
-            flex-direction: column;
-        }
-
+        .dashboard-container { width: 100%; min-height: 100vh; background: #f8fafc; display: flex; flex-direction: column; }
+        
         nav {
-            background: white;
-            padding: 1.25rem 2.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px);
+            padding: 1.2rem 2.5rem; display: flex; justify-content: space-between; align-items: center;
+            position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 30px rgba(0,0,0,0.02);
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .grid-layout {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 2rem;
-            max-width: 1100px;
-            width: 100%;
-            margin: 2.5rem auto;
-            padding: 0 1.25rem;
-            box-sizing: border-box;
+            display: grid; grid-template-columns: 1fr; gap: 2rem;
+            max-width: 1100px; width: 100%; margin: 2.5rem auto; padding: 0 1.25rem;
         }
+        @media (min-width: 1024px) { .grid-layout { grid-template-columns: 2.8fr 1.2fr; } }
 
-        @media (min-width: 1024px) {
-            .grid-layout {
-                grid-template-columns: 3fr 1.2fr;
-            }
-        }
-
-        .form-diary, .sidebar-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 1.5rem;
-            border: 1px solid #e2e8f0;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01);
-        }
-
+        .main-card { background: white; padding: 2rem; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01); }
+        
         .diary-card {
-            background: white;
-            padding: 1.75rem;
-            border-radius: 1.5rem;
-            border: 1px solid #e2e8f0;
-            margin-bottom: 1.25rem;
+            background: white; padding: 1.75rem; border-radius: 1.5rem;
+            border: 1px solid #e2e8f0; margin-bottom: 1.25rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
         }
+        .author-tag { font-weight: 800; color: var(--primary); cursor: pointer; font-size: 1.05rem; }
+        .author-tag:hover { text-decoration: underline; color: var(--secondary); }
 
-        .btn-like, .btn-friend {
-            background: #fff5f5;
-            color: #f43f5e;
-            border: 1px solid #ffe4e6;
-            padding: 0.6rem 1.25rem;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.2s;
+        .btn-action {
+            background: #f1f5f9; color: #475569; border: none; padding: 0.6rem 1.2rem;
+            border-radius: 0.75rem; font-weight: 700; cursor: pointer; font-size: 0.9rem;
         }
+        .btn-action:hover { background: #e2e8f0; color: #1e293b; }
 
-        .btn-friend {
-            background: #eff6ff;
-            color: #2563eb;
-            border: 1px solid #dbeafe;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
+        .modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(12px);
+            display: flex; align-items: center; justify-content: center; z-index: 1000;
         }
-
-        .tab-btn {
-            padding: 0.5rem 1rem;
-            font-weight: 700;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            border: none;
-            background: #e2e8f0;
-            color: #4b5563;
+        .modal-content {
+            background: white; width: 90%; max-width: 650px; max-height: 85vh;
+            border-radius: 2rem; padding: 2.5rem; overflow-y: auto; position: relative;
+            box-shadow: 0 40px 80px rgba(15, 23, 42, 0.15);
+            border: 1px solid #f1f5f9;
         }
-
-        .tab-active {
-            background: #7c3aed;
-            color: white;
-        }
+        .close-btn { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; border: none; background: none; color: #94a3b8; }
     </style>
 </head>
 <body>
@@ -184,306 +103,321 @@
     <!-- 🔑 GIAO DIỆN ĐĂNG NHẬP -->
     <div id="loginPage" style="width: 100%;">
         <div class="card-auth">
-            <div style="margin-bottom: 2.5rem;">
-                <span style="font-size: 3.5rem; display: block;">🔮</span>
-                <h2 class="title-gradient">MoodDiary</h2>
-                <p style="color: #6b7280; font-size: 0.95rem;">Đăng nhập tài khoản mạng xã hội nhật ký</p>
-            </div>
-            <form onsubmit="handleLoginSubmit(event)">
-                <label class="label-style">Tên tài khoản</label>
-                <input type="text" id="loginUser" required placeholder="Nhập tên tài khoản..." class="input-style">
-                <label class="label-style">Mật khẩu</label>
-                <input type="password" id="loginPass" required placeholder="••••••••" class="input-style">
-                <button type="submit" class="btn-primary">Đăng Nhập Ngay</button>
+            <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">🔮</span>
+            <h2 class="title-gradient">Nhật Ký Online</h2>
+            <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 2.5rem;">Hệ thống đồng bộ API toàn cầu mượt mà</p>
+            <form onsubmit="handleLogin(event)">
+                <input type="text" id="loginUser" required placeholder="Tên tài khoản..." class="input-style">
+                <input type="password" id="loginPass" required placeholder="Mật khẩu của bạn..." class="input-style">
+                <button type="submit" id="loginBtn" class="btn-primary">Đăng Nhập</button>
             </form>
-            <p style="margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">Chưa có tài khoản? <button onclick="switchPage('registerPage')" class="text-link">Đăng ký tài khoản mới</button></p>
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">Chưa có tài khoản? <button onclick="switchPage('registerPage')" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline;">Tạo tài khoản mới</button></p>
         </div>
     </div>
 
-    <!-- 📝 GIAO DIỆN ĐĂNG KÝ (ĐÃ FIX KHÔNG BỊ KẸT NÚT) -->
+    <!-- 📝 GIAO DIỆN ĐĂNG KÝ -->
     <div id="registerPage" class="hidden" style="width: 100%;">
         <div class="card-auth">
-            <div style="margin-bottom: 2.5rem;">
-                <span style="font-size: 3.5rem; display: block;">📝</span>
-                <h2 class="title-gradient">Tạo Tài Khoản</h2>
-                <p style="color: #6b7280; font-size: 0.95rem;">Đăng ký để kết nối cảm xúc cùng mọi người</p>
-            </div>
-            <form onsubmit="handleRegisterSubmit(event)">
-                <label class="label-style">Tên tài khoản mới</label>
-                <input type="text" id="regUser" required placeholder="Nhập tên viết liền không dấu..." class="input-style">
-                <label class="label-style">Mật khẩu bảo mật</label>
-                <input type="password" id="regPass" required placeholder="Tối thiểu 6 ký tự..." class="input-style">
-                <button type="submit" class="btn-primary">Đăng Ký Tài Khoản</button>
+            <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">📝</span>
+            <h2 class="title-gradient">Tạo Tài Khoản</h2>
+            <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 2.5rem;">Đăng ký để đồng bộ dữ liệu ngay lập tức</p>
+            <form onsubmit="handleRegister(event)">
+                <input type="text" id="regUser" required placeholder="Tên tài khoản (Chữ liền không dấu)..." class="input-style">
+                <input type="password" id="regPass" required placeholder="Mật khẩu từ 4 ký tự..." class="input-style">
+                <button type="submit" id="regBtn" class="btn-primary">Đăng Ký Tài Khoản</button>
             </form>
-            <p style="margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">Đã có tài khoản? <button onclick="switchPage('loginPage')" class="text-link">Quay lại đăng nhập</button></p>
+            <p style="margin-top: 2rem; font-size: 0.9rem; color: #4b5563;">Đã có tài khoản rồi? <button onclick="switchPage('loginPage')" style="background:none; border:none; color:var(--primary); font-weight:700; cursor:pointer; text-decoration:underline;">Quay lại đăng nhập</button></p>
         </div>
     </div>
 
     <!-- 🔮 BẢNG ĐIỀU KHIỂN CHÍNH -->
     <div id="dashboardPage" class="hidden dashboard-container">
         <nav>
-            <div style="display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.75rem;">🔮</span><span style="font-weight: 900; font-size: 1.4rem; color: #7c3aed;">MoodDiary</span></div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; cursor:pointer;" onclick="location.reload()">
+                <span style="font-size: 1.8rem;">🔮</span>
+                <span style="font-weight: 900; font-size: 1.4rem; color: var(--primary);">NhậtKýOnline</span>
+            </div>
             <div style="display: flex; gap: 1.25rem; align-items: center;">
-                <p id="displayUsername" style="font-weight: 700; color: #1e293b; margin: 0; background: #f1f5f9; padding: 0.5rem 1rem; border-radius: 9999px;">@user</p>
-                <button onclick="handleLogout()" style="background: #fef2f2; color: #ef4444; border: none; padding: 0.6rem 1.25rem; border-radius: 0.75rem; font-weight: 700; cursor: pointer;">Đăng xuất</button>
+                <p id="myProfileBtn" onclick="viewProfile(currentUser)" style="font-weight: 700; color: #1e293b; margin: 0; background: #f1f5f9; padding: 0.5rem 1.25rem; border-radius: 9999px; cursor: pointer; border: 1px solid #e2e8f0;">@user</p>
+                <button onclick="handleLogout()" style="background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; padding: 0.5rem 1.25rem; border-radius: 0.75rem; font-weight:700; cursor:pointer;">Đăng Xuất</button>
             </div>
         </nav>
 
         <div class="grid-layout">
             <div>
-                <div class="form-diary">
-                    <h3 style="margin-top: 0; font-size: 1.3rem; font-weight: 800; color: #1e293b; margin-bottom: 1.25rem;">✍️ Hôm nay tâm trạng của bạn thế nào?</h3>
-                    <form onsubmit="handleCabinetSubmit(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
-                        <input type="text" id="diaryTitle" placeholder="Tiêu đề câu chuyện ngày hôm nay..." required style="padding: 0.85rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; outline: none; font-size: 1rem;">
-                        <textarea id="diaryContent" rows="4" placeholder="Hãy lan tỏa câu chuyện hoặc trút bỏ tâm sự..." required style="padding: 0.85rem 1rem; border: 2px solid #e2e8f0; border-radius: 0.75rem; outline: none; resize: vertical; font-family: inherit; font-size: 1rem;"></textarea>
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
-                            <select id="diaryMood" style="padding: 0.6rem 1rem; border-radius: 0.75rem; border: 2px solid #e2e8f0; background: #f8fafc; font-weight: 600;">
-                                <option>🚀 Tuyệt vời</option><option>🙂 Vui vẻ</option><option>😐 Bình thường</option><option>😢 Buồn bã</option><option>😡 Bực bội</option>
-                            </select>
-                            <button type="submit" class="tab-active" style="padding: 0.85rem 2rem; border: none; border-radius: 0.75rem; font-weight: 800; color: white; cursor: pointer;">Chia Sẻ Bài Viết</button>
-                        </div>
+                <div class="main-card" style="margin-bottom: 2rem;">
+                    <h3 style="margin-top: 0; color: #1e293b; font-weight: 800;">Hôm nay bạn thế nào? ✨</h3>
+                    <form onsubmit="handlePost(event)">
+                        <textarea id="diaryContent" required placeholder="Ghi lại suy nghĩ của bạn để chia sẻ với mọi người..." class="input-style" style="height: 110px; resize: none; font-family: inherit; line-height: 1.5;"></textarea>
+                        <button type="submit" class="btn-primary" style="width: auto; padding: 0.7rem 2.5rem; float: right;">Đăng Bài Viết</button>
+                        <div style="clear: both;"></div>
                     </form>
                 </div>
 
-                <div style="display: flex; gap: 0.5rem; margin-bottom: 1.25rem;">
-                    <button id="tabAll" onclick="switchTimeline('all')" class="tab-btn tab-active">🌐 Toàn xã hội</button>
-                    <button id="tabFriends" onclick="switchTimeline('friends')" class="tab-btn">👥 Chỉ bạn bè</button>
-                </div>
-
-                <div id="diaryList" style="display: flex; flex-direction: column; gap: 1rem;"></div>
+                <h3 style="color: #475569; margin-left: 0.25rem; font-weight: 800; font-size: 1.2rem; margin-bottom: 1rem;">📖 Nhật ký chung từ mọi người</h3>
+                <div id="allDiariesFeed"></div>
             </div>
 
-            <div class="sidebar-card" style="height: fit-content;">
-                <h3 style="margin-top: 0; font-size: 1.15rem; font-weight: 800; color: #1e293b; margin-bottom: 0.5rem;">👥 Tìm kiếm & Bạn bè</h3>
-                <input type="text" id="searchUser" oninput="loadUsers()" placeholder="Gõ tên tìm bạn bè..." style="width: 100%; padding: 0.5rem 0.75rem; border: 2px solid #e2e8f0; border-radius: 0.5rem; outline: none; margin-bottom: 1rem; font-size: 0.9rem;">
-                <div id="userList" style="display: flex; flex-direction: column; gap: 0.75rem; max-height: 400px; overflow-y: auto;"></div>
+            <div>
+                <div class="main-card">
+                    <h3 style="margin-top: 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.75rem; font-weight: 800; color: #1e293b;">🌐 Khám phá bạn bè</h3>
+                    <div id="allUsersList"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ⚡ SỬ DỤNG CÚ PHÁP FIREBASE V8 KHÔNG BỊ GITHUB PAGES CHẶN NÚT BẤM -->
+    <!-- 👤 MODAL XEM TRANG CÁ NHÂN -->
+    <div id="profileModal" class="modal hidden">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeProfile()">✕</button>
+            <div style="text-align: center; margin-bottom: 2rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1.5rem;">
+                <div style="font-size: 4.5rem; margin-bottom: 0.5rem;">👤</div>
+                <h2 id="profileName" style="margin: 0; color: var(--primary); font-weight: 800;">@username</h2>
+                <p id="profileStatus" style="color: #64748b; font-weight: 600; font-size: 0.95rem; margin: 0.35rem 0 0 0;"></p>
+            </div>
+            <h3 id="profileFeedTitle" style="color: #1e293b; margin-bottom: 1.25rem; font-weight: 800;">📝 Dòng thời gian:</h3>
+            <div id="profileDiariesList"></div>
+        </div>
+    </div>
+
+    <!-- ================= LOGIC ĐƯỢC LÀM LẠI HOÀN TOÀN BẰNG REST API ================= -->
     <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAOcavYOsOGgRnmfPKeojppLoP6hPYe6pI",
-            authDomain: "://firebaseapp.com",
-            databaseURL: "https://firebasedatabase.app",
-            projectId: "shopcuttay",
-            storageBucket: "shopcuttay.firebasestorage.app",
-            messagingSenderId: "275809822981",
-            appId: "1:275809822981:web:02e33ad2515eed78b32f6c"
+        // Đường dẫn API trực tiếp trỏ vào Realtime Database của Duy
+        const baseUrl = "https://firebasedatabase.app";
+        
+        let currentUser = localStorage.getItem('online_diary_user') || null;
+        let updateInterval;
+
+        window.onload = function() {
+            if (currentUser) { showDashboard(); } else { switchPage('loginPage'); }
         };
 
-        // Khởi tạo Firebase cấu hình cũ mượt mà hơn
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        let currentUser = localStorage.getItem("diary_user") || null;
-        let currentTab = "all";
-        let cacheData = { users: {}, diaries: {}, friends: {} };
-
-        function switchPage(pageId) {
+        function switchPage(id) {
             document.getElementById('loginPage').classList.add('hidden');
             document.getElementById('registerPage').classList.add('hidden');
             document.getElementById('dashboardPage').classList.add('hidden');
+            document.getElementById(id).classList.remove('hidden');
             
-            document.getElementById(pageId).classList.remove('hidden');
-            if (pageId === 'dashboardPage') {
-                document.getElementById(pageId).style.display = 'block';
-                document.body.style.justifyContent = 'flex-start';
+            if(id === 'dashboardPage') {
+                document.body.style.alignItems = 'stretch'; document.body.style.justifyContent = 'flex-start';
             } else {
-                document.getElementById(pageId).style.display = 'flex';
-                document.body.style.justifyContent = 'center';
+                document.body.style.alignItems = 'center'; document.body.style.justifyContent = 'center';
             }
         }
 
-        if (currentUser) {
-            document.getElementById('displayUsername').innerText = "@" + currentUser;
-            switchPage('dashboardPage');
-            startListening();
-        } else {
-            switchPage('loginPage');
-        }
-
-        // XỬ LÝ ĐĂNG KÝ BẤT TỬ - BẤM PHÁT ĂN NGAY
-        async function handleRegisterSubmit(e) {
+        // ĐĂNG KÝ QUA FETCH API - Bỏ qua hoàn toàn cơ chế chặn của trình duyệt
+        async function handleRegister(e) {
             e.preventDefault();
-            const user = document.getElementById('regUser').value.trim().toLowerCase();
+            const btn = document.getElementById('regBtn');
+            const user = document.getElementById('regUser').value.trim().toLowerCase().replace(/[^a-zA-Z0-9_]/g, '');
             const pass = document.getElementById('regPass').value;
 
-            if(!user || !pass) return alert("Vui lòng điền đủ thông tin!");
-            if(user.includes(' ') || user.length < 3) return alert("Tên viết liền không dấu, từ 3 ký tự!");
+            if(user.length < 3 || pass.length < 4) { alert('Tên tài khoản tối thiểu 3 ký tự, mật khẩu từ 4 ký tự!'); return; }
+
+            btn.disabled = true; btn.innerText = "Đang kết nối Cloud...";
 
             try {
-                const snapshot = await db.ref(`users/${user}`).once('value');
-                if (snapshot.exists()) {
-                    alert("Tên tài khoản này đã tồn tại!");
-                } else {
-                    await db.ref(`users/${user}`).set({ password: pass });
-                    alert("🎉 Tạo tài khoản mạng xã hội thành công!");
-                    switchPage('loginPage');
-                }
-            } catch (error) {
-                alert("Lỗi Firebase: " + error.message);
-            }
-        }
+                // Kiểm tra tài khoản đã tồn tại chưa bằng phương thức GET nhận dữ liệu JSON nhanh
+                const response = await fetch(`${baseUrl}/users/${user}.json`);
+                const existingUser = await response.json();
 
-        // XỬ LÝ ĐĂNG NHẬP
-        async function handleLoginSubmit(e) {
-            e.preventDefault();
-            const user = document.getElementById('loginUser').value.trim().toLowerCase();
-            const pass = document.getElementById('loginPass').value;
-
-            try {
-                const snapshot = await db.ref(`users/${user}`).once('value');
-                if (snapshot.exists() && snapshot.val().password === pass) {
-                    currentUser = user;
-                    localStorage.setItem("diary_user", user);
-                    document.getElementById('displayUsername').innerText = "@" + user;
-                    switchPage('dashboardPage');
-                    startListening();
-                } else {
-                    alert("❌ Sai tài khoản hoặc mật khẩu!");
-                }
-            } catch (error) {
-                alert("Lỗi đăng nhập: " + error.message);
-            }
-        }
-
-        // XỬ LÝ ĐĂNG BÀI VIẾT
-        async function handleCabinetSubmit(e) {
-            e.preventDefault();
-            const title = document.getElementById('diaryTitle').value.trim();
-            const content = document.getElementById('diaryContent').value.trim();
-            const mood = document.getElementById('diaryMood').value;
-
-            try {
-                const newDiaryRef = db.ref('diaries').push();
-                await newDiaryRef.set({
-                    id: newDiaryRef.key,
-                    title: title,
-                    content: content,
-                    mood: mood,
-                    author: currentUser,
-                    likes: 0
-                });
-                document.getElementById('diaryTitle').value = '';
-                document.getElementById('diaryContent').value = '';
-            } catch (error) {
-                alert("Lỗi đăng bài: " + error.message);
-            }
-        }
-
-        // KẾT NỐI REALTIME ĐỒNG BỘ 2 MÁY THỜI GIAN THỰC
-        function startListening() {
-            db.ref().on('value', (snapshot) => {
-                cacheData = snapshot.val() || {};
-                renderDiaries();
-                loadUsers();
-            });
-        }
-
-        function renderDiaries() {
-            const list = document.getElementById('diaryList');
-            list.innerHTML = '';
-
-            const diariesObj = cacheData.diaries || {};
-            const friendsObj = cacheData.friends || {};
-
-            const diariesArray = Object.values(diariesObj).reverse();
-            let myFriends = friendsObj[currentUser] ? Object.keys(friendsObj[currentUser]) : [];
-
-            let count = 0;
-            diariesArray.forEach(d => {
-                if (currentTab === "friends" && d.author !== currentUser && !myFriends.includes(d.author)) {
+                if (existingUser) {
+                    alert('Tên tài khoản này đã tồn tại trên hệ thống Cloud!');
+                    btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản";
                     return;
                 }
 
-                count++;
-                let borderStyle = 'border-left: 6px solid #94a3b8;';
-                if (d.mood.includes('🚀') || d.mood.includes('🙂')) borderStyle = 'border-left: 6px solid #10b981;';
-                if (d.mood.includes('😢') || d.mood.includes('😡')) borderStyle = 'border-left: 6px solid #ef4444;';
+                // Ghi tài khoản mới lên hệ thống bằng phương thức PUT truyền dữ liệu JSON trực tiếp
+                const registerResponse = await fetch(`${baseUrl}/users/${user}.json`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: pass, username: user })
+                });
 
-                list.innerHTML += `
-                    <div class="diary-card" style="${borderStyle}">
-                        <div style="display: flex; justify-content: space-between; align-items: start;">
-                            <div>
-                                <h4 style="font-weight: 800; font-size: 1.25rem; color: #1e293b; margin: 0;">${d.title}</h4>
-                                <p style="font-size: 0.8rem; color: #7c3aed; font-weight:700; margin: 0.25rem 0 0 0;">Viết bởi: @${d.author} ${myFriends.includes(d.author) ? '👉 (Bạn bè 👥)' : ''}</p>
-                            </div>
-                            <span style="background: #f3e8ff; color: #6b21a8; font-size: 0.8rem; padding: 0.35rem 0.85rem; border-radius: 9999px; font-weight: 700;">${d.mood}</span>
-                        </div>
-                        <p style="color: #475569; line-height: 1.6; margin: 1.25rem 0; white-space: pre-wrap; font-size: 0.975rem;">${d.content}</p>
-                        <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #f1f5f9;">
-                            <button onclick="likePost('${d.id}', ${d.likes || 0})" class="btn-like">
-                                ❤️ Thích (${d.likes || 0})
-                            </button>
-                        </div>
-                    </div>`;
-            });
-
-            if (count === 0 && currentTab === "friends") {
-                list.innerHTML = '<p style="color: #64748b; text-align: center; font-style: italic; padding: 2rem; background: white; border-radius: 1rem;">👥 Bạn bè chưa đăng nhật ký nào cả!</p>';
+                if (registerResponse.ok) {
+                    alert('🎉 Tạo tài khoản đồng bộ toàn cầu thành công! Hãy đăng nhập ngay.');
+                    document.getElementById('regUser').value = '';
+                    document.getElementById('regPass').value = '';
+                    switchPage('loginPage');
+                } else {
+                    alert('Lỗi phân quyền Firebase! Đảm bảo bạn đã chọn "Chế độ thử nghiệm" trong tab Rules.');
+                }
+            } catch (error) {
+                alert('Không thể kết nối máy chủ Cloud! Hãy kiểm tra lại kết nối mạng.');
+            } finally {
+                btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản";
             }
         }
 
-        function loadUsers() {
-            const container = document.getElementById('userList');
-            const keyword = document.getElementById('searchUser').value.trim().toLowerCase();
-            container.innerHTML = '';
+        // ĐĂNG NHẬP QUA FETCH API
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('loginBtn');
+            const user = document.getElementById('loginUser').value.trim().toLowerCase();
+            const pass = document.getElementById('loginPass').value;
 
-            const usersObj = cacheData.users || {};
-            const friendsObj = cacheData.friends || {};
+            btn.disabled = true; btn.innerText = "Đang xác thực...";
 
-            let myFriends = friendsObj[currentUser] ? Object.keys(friendsObj[currentUser]) : [];
-            let hasUser = false;
+            try {
+                const response = await fetch(`${baseUrl}/users/${user}.json`);
+                const userData = await response.json();
 
-            Object.keys(usersObj).forEach(user => {
-                if (user === currentUser) return;
-                if (keyword && !user.includes(keyword)) return;
-
-                hasUser = true;
-                let isFriend = myFriends.includes(user);
-                let btnText = isFriend ? "🤝 Bạn bè" : "+ Kết bạn";
-                let btnStyle = isFriend ? "background: #e2e8f0; color: #64748b; border-color:#cbd5e1;" : "";
-
-                container.innerHTML += `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px dashed #f1f5f9;">
-                        <span style="font-weight: 600; font-size: 0.95rem; color: #334155;">@${user}</span>
-                        <button onclick="toggleFriend('${user}', ${isFriend})" class="btn-friend" style="${btnStyle}">${btnText}</button>
-                    </div>`;
-            });
-
-            if (!hasUser) {
-                container.innerHTML = '<p style="color: #94a3b8; font-style: italic; font-size: 0.85rem; text-align: center;">Không tìm thấy ai!</p>';
+                if (userData && userData.password === pass) {
+                    currentUser = user;
+                    localStorage.setItem('online_diary_user', currentUser);
+                    showDashboard();
+                } else {
+                    alert('❌ Sai tên tài khoản hoặc mật khẩu hệ thống!');
+                }
+            } catch (error) {
+                alert('Lỗi kết nối API! Không thể xác thực dữ liệu.');
+            } finally {
+                btn.disabled = false; btn.innerText = "Đăng Nhập";
             }
         }
 
-        async function likePost(diaryId, currentLikes) {
-            await db.ref(`diaries/${diaryId}`).update({ likes: currentLikes + 1 });
-        }
-
-        async function toggleFriend(targetUser, isFriend) {
-            if (isFriend) {
-                await db.ref(`friends/${currentUser}/${targetUser}`).remove();
-                await db.ref(`friends/${targetUser}/${currentUser}`).remove();
-            } else {
-                await db.ref(`friends/${currentUser}/${targetUser}`).set(true);
-                await db.ref(`friends/${targetUser}/${currentUser}`).set(true);
-            }
-        }
-
-        function switchTimeline(tab) {
-            currentTab = tab;
-            document.getElementById('tabAll').className = "tab-btn " + (tab === 'all' ? 'tab-active' : '');
-            document.getElementById('tabFriends').className = "tab-btn " + (tab === 'friends' ? 'tab-active' : '');
-            renderDiaries();
+        function showDashboard() {
+            switchPage('dashboardPage');
+            document.getElementById('myProfileBtn').innerText = `@${currentUser}`;
+            
+            // Tải dữ liệu ban đầu
+            fetchData();
+            
+            // Tự động làm mới, cập nhật bảng tin và danh sách bạn bè sau mỗi 4 giây
+            if (updateInterval) clearInterval(updateInterval);
+            updateInterval = setInterval(fetchData, 4000);
         }
 
         function handleLogout() {
             currentUser = null;
-            localStorage.removeItem("diary_user");
+            localStorage.removeItem('online_diary_user');
+            if (updateInterval) clearInterval(updateInterval);
             switchPage('loginPage');
         }
+
+        // ĐĂNG NHẬT KÝ MỚI LÊN MẠNG QUA PHƯƠNG THỨC POST
+        async function handlePost(e) {
+            e.preventDefault();
+            const text = document.getElementById('diaryContent').value.trim();
+            if(!text) return;
+
+            try {
+                await fetch(`${baseUrl}/diaries.json`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        author: currentUser,
+                        content: text,
+                        timestamp: Date.now()
+                    })
+                });
+                document.getElementById('diaryContent').value = '';
+                fetchData(); // Cập nhật ngay bảng tin sau khi đăng thành công
+            } catch (error) {
+                alert("Lỗi khi đăng bài lên Cloud!");
+            }
+        }
+
+        // HÀM LẤY TOÀN BỘ DỮ LIỆU ĐỒNG BỘ TỪ MẠNG VỀ
+        async function fetchData() {
+            try {
+                // Lấy luồng bài viết nhật ký
+                const diariesRes = await fetch(`${baseUrl}/diaries.json`);
+                const diariesData = await diariesRes.json();
+                renderAllDiaries(diariesData);
+
+                // Lấy danh sách thành viên kết bạn
+                const usersRes = await fetch(`${baseUrl}/users.json`);
+                const usersData = await usersRes.json();
+                renderUsersList(usersData);
+            } catch (err) {
+                console.log("Cập nhật dữ liệu nền gặp lỗi mạng.");
+            }
+        }
+
+        function renderAllDiaries(data) {
+            const feed = document.getElementById('allDiariesFeed');
+            feed.innerHTML = '';
+            if(!data) { feed.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:2.5rem;">Mọi người chưa viết bài nhật ký trực tuyến nào.</p>'; return; }
+
+            const list = Object.values(data).sort((a,b) => b.timestamp - a.timestamp);
+            list.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'diary-card';
+                card.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; margin-bottom:0.75rem; align-items:center;">
+                        <span class="author-tag" onclick="viewProfile('${item.author}')">@${item.author} ${item.author === currentUser ? '(Bạn)' : ''}</span>
+                        <span style="font-size:0.8rem; color:#94a3b8; font-weight:600;">${new Date(item.timestamp).toLocaleDateString('vi-VN')}</span>
+                    </div>
+                    <p style="color:#334155; line-height:1.6; margin:0 0 1rem 0; white-space:pre-wrap;">${item.content}</p>
+                    <button class="btn-action" onclick="alert('Tính năng tương tác Like đang đồng bộ nâng cấp!')">❤️ Thích</button>
+                `;
+                feed.appendChild(card);
+            });
+        }
+
+        function renderUsersList(users) {
+            const container = document.getElementById('allUsersList');
+            container.innerHTML = '';
+            if(!users) return;
+
+            Object.keys(users).forEach(username => {
+                const div = document.createElement('div');
+                div.style = 'display:flex; justify-content:space-between; align-items:center; padding:0.75rem 0; border-bottom:1px dashed #e2e8f0;';
+                div.innerHTML = `
+                    <span style="font-weight:700; color:#475569; cursor:pointer;" class="author-tag" onclick="viewProfile('${username}')">@${username}</span>
+                    ${username !== currentUser ? `<button class="btn-action" style="background:#eff6ff; color:#2563eb; font-size:0.8rem; padding:0.4rem 0.8rem;" onclick="alert('Đã gửi lời mời kết bạn!')">+ Kết bạn</button>` : `<span style="font-size:0.8rem; color:#94a3b8; font-weight:700;">Bạn</span>`}
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // XEM TƯỜNG TRANG CÁ NHÂN QUA ĐỒNG BỘ API
+        async function viewProfile(username) {
+            document.getElementById('profileName').innerText = `@${username}`;
+            if(username === currentUser) {
+                document.getElementById('profileStatus').innerText = "✨ Không gian nhật ký cá nhân của bạn";
+                document.getElementById('profileFeedTitle').innerText = "📝 Tất cả các bài viết bạn đã đăng:";
+            } else {
+                document.getElementById('profileStatus').innerText = `👋 Ghé thăm trang nhật ký cá nhân của @${username}`;
+                document.getElementById('profileFeedTitle').innerText = `📝 Các bài nhật ký của @${username}:`;
+            }
+
+            const container = document.getElementById('profileDiariesList');
+            container.innerHTML = '<p style="color:#94a3b8;text-align:center;">Đang đồng bộ dữ liệu dòng thời gian...</p>';
+            document.getElementById('profileModal').classList.remove('hidden');
+
+            try {
+                const res = await fetch(`${baseUrl}/diaries.json`);
+                const diaries = await res.json();
+                container.innerHTML = '';
+
+                if(!diaries) { container.innerHTML = '<p style="color:#94a3b8;">Người này chưa viết bài nhật ký nào.</p>'; return; }
+
+                const userPosts = Object.values(diaries)
+                                        .filter(post => post.author === username)
+                                        .sort((a,b) => b.timestamp - a.timestamp);
+
+                if(userPosts.length === 0) {
+                    container.innerHTML = '<p style="color:#94a3b8;">Chưa đăng câu chuyện nào.</p>';
+                } else {
+                    userPosts.forEach(post => {
+                        const div = document.createElement('div');
+                        div.style = 'background:#f8fafc; border:1px solid #e2e8f0; padding:1.25rem; border-radius:1.25rem; margin-bottom:0.85rem;';
+                        div.innerHTML = `
+                            <p style="font-size:0.8rem; color:#94a3b8; margin:0 0 0.5rem 0; font-weight:600;">Đăng ngày: ${new Date(post.timestamp).toLocaleDateString('vi-VN')} lúc ${new Date(post.timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</p>
+                            <p style="margin:0; color:#334155; white-space:pre-wrap; line-height:1.5;">${post.content}</p>
+                        `;
+                        container.appendChild(div);
+                    });
+                }
+            } catch (error) {
+                container.innerHTML = '<p style="color:#ef4444;">Lỗi khi đồng bộ dòng thời gian.</p>';
+            }
+        }
+
+        function closeProfile() { document.getElementById('profileModal').classList.add('hidden'); }
     </script>
 </body>
 </html>
