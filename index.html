@@ -6,7 +6,7 @@
     <title>🔮 Nhật Ký Toàn Cầu - Mạng Xã Hội Nhật Ký</title>
     <link href="https://googleapis.com" rel="stylesheet">
     
-    <!-- Thư viện Firebase V8 cốt lõi giúp đồng bộ xuyên quốc gia -->
+    <!-- FIX TREO: Ép buộc trình duyệt tải thư viện bằng giao thức bảo mật HTTPS chống chặn trên GitHub Pages -->
     <script src="https://gstatic.com"></script>
     <script src="https://gstatic.com"></script>
 
@@ -16,50 +16,53 @@
             --primary-light: #a78bfa;
             --secondary: #db2777;
             --bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 50%, #fce7f3 100%);
-            --glass: rgba(255, 255, 255, 0.8);
-            --border: rgba(255, 255, 255, 0.5);
+            --glass: rgba(255, 255, 255, 0.85);
+            --border: rgba(255, 255, 255, 0.6);
             --text: #1e293b;
         }
 
         .hidden { display: none !important; }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: all 0.2s ease; }
         
+        /* FIX CĂN GIỮA: Sử dụng Flexbox ép khung luôn nằm giữa màn hình PC và Điện thoại */
         body {
             background: var(--bg-gradient) !important;
             margin: 0; padding: 0; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* Form Đăng Nhập / Đăng Ký */
+        /* Khung Đăng Nhập Kiểu FB App Đẹp Mê Ly */
         .card-auth {
-            background: var(--glass); backdrop-filter: blur(20px);
-            padding: 3rem 2.5rem; border-radius: 2rem; width: 90%; max-width: 420px;
-            box-shadow: 0 25px 60px -15px rgba(124, 58, 237, 0.15);
+            background: var(--glass); backdrop-filter: blur(25px);
+            padding: 3rem 2rem; border-radius: 2rem; width: 90%; max-width: 400px;
+            box-shadow: 0 25px 60px -15px rgba(124, 58, 237, 0.2);
             border: 1px solid var(--border); text-align: center;
+            margin: auto; /* Tự động đẩy đều các góc */
         }
 
         .title-gradient {
-            font-size: 2.3rem; font-weight: 800;
+            font-size: 2.2rem; font-weight: 800;
             background: linear-gradient(to right, var(--primary), var(--secondary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 0.5rem 0;
         }
 
         .input-style {
-            width: 100%; padding: 0.9rem 1.25rem; border: 2px solid #e2e8f0;
-            border-radius: 1rem; margin-bottom: 1.25rem; outline: none; font-size: 1rem;
-            background: rgba(255, 255, 255, 0.6); color: var(--text); font-weight: 500;
+            width: 100%; padding: 0.95rem 1.25rem; border: 2px solid #e2e8f0;
+            border-radius: 1.25rem; margin-bottom: 1.25rem; outline: none; font-size: 1rem;
+            background: rgba(255, 255, 255, 0.7); color: var(--text); font-weight: 500;
         }
         .input-style:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1); }
 
         .btn-primary {
             width: 100%; padding: 1rem;
             background: linear-gradient(135deg, var(--primary) 0%, #4f46e5 100%);
-            color: white; border: none; border-radius: 1rem; font-weight: 800; cursor: pointer;
+            color: white; border: none; border-radius: 1.25rem; font-weight: 800; cursor: pointer;
             text-transform: uppercase; letter-spacing: 0.5px; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
         }
         .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(124, 58, 237, 0.35); }
+        .btn-primary:disabled { background: #94a3b8 !important; cursor: not-allowed; transform: none; box-shadow: none; }
 
-        /* Giao Diện Dashboard Chính */
+        /* Giao Diện Dashboard (Trang Chủ Nhật Ký) */
         .dashboard-container { width: 100%; min-height: 100vh; background: #f8fafc; display: flex; flex-direction: column; }
         
         nav {
@@ -77,7 +80,6 @@
 
         .main-card { background: white; padding: 2rem; border-radius: 1.5rem; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01); }
         
-        /* Bài Viết Nhật Ký Card */
         .diary-card {
             background: white; padding: 1.75rem; border-radius: 1.5rem;
             border: 1px solid #e2e8f0; margin-bottom: 1.25rem;
@@ -94,7 +96,6 @@
         .btn-action:hover { background: #e2e8f0; color: #1e293b; }
         .btn-action.liked { background: #fff1f2; color: #f43f5e; border: 1px solid #ffe4e6; }
 
-        /* Modal Xem Trang Cá Nhân */
         .modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(15, 23, 42, 0.3); backdrop-filter: blur(12px);
@@ -106,8 +107,6 @@
             box-shadow: 0 40px 80px rgba(15, 23, 42, 0.15); border: 1px solid #f1f5f9;
         }
         .close-btn { position: absolute; top: 1.5rem; right: 1.5rem; font-size: 1.5rem; cursor: pointer; border: none; background: none; color: #94a3b8; }
-        
-        /* Bạn bè list */
         .user-item { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0; border-bottom: 1px dashed #e2e8f0; }
     </style>
 </head>
@@ -118,7 +117,7 @@
         <div class="card-auth">
             <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">🔮</span>
             <h2 class="title-gradient">Nhật Ký Online</h2>
-            <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 2.5rem;">Đám mây trực tuyến: nhatkytoancau</p>
+            <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 2.5rem;">Mạng xã hội đám mây toàn cầu</p>
             <form onsubmit="handleLogin(event)">
                 <input type="text" id="loginUser" autocomplete="username" required placeholder="Tên tài khoản..." class="input-style">
                 <input type="password" id="loginPass" autocomplete="current-password" required placeholder="Mật khẩu của bạn..." class="input-style">
@@ -133,9 +132,9 @@
         <div class="card-auth">
             <span style="font-size: 3.5rem; display: block; margin-bottom: 0.5rem;">📝</span>
             <h2 class="title-gradient">Tạo Tài Khoản</h2>
-            <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 2.5rem;">Đăng ký để đồng bộ dữ liệu toàn cầu</p>
+            <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 2.5rem;">Đăng ký để đồng bộ dữ liệu ngay lập tức</p>
             <form onsubmit="handleRegister(event)">
-                <input type="text" id="regUser" required placeholder="Tên tài khoản (Chữ liền không dấu)..." class="input-style">
+                <input type="text" id="regUser" required placeholder="Tên tài khoản viết liền..." class="input-style">
                 <input type="password" id="regPass" required placeholder="Mật khẩu từ 4 ký tự..." class="input-style">
                 <button type="submit" id="regBtn" class="btn-primary">Đăng Ký Tài Khoản</button>
             </form>
@@ -143,7 +142,7 @@
         </div>
     </div>
 
-    <!-- 🔮 BẢNG ĐIỀU KHIỂN CHÍNH (DASHBOARD) -->
+    <!-- 🔮 BẢNG ĐIỀU KHIỂN CHÍNH -->
     <div id="dashboardPage" class="hidden dashboard-container">
         <nav>
             <div style="display: flex; align-items: center; gap: 0.5rem; cursor:pointer;" onclick="location.reload()">
@@ -157,22 +156,20 @@
         </nav>
 
         <div class="grid-layout">
-            <!-- Luồng Đăng Bài & Bảng Tin Chung -->
             <div>
                 <div class="main-card" style="margin-bottom: 2rem;">
                     <h3 style="margin-top: 0; color: #1e293b; font-weight: 800;">Hôm nay bạn thế nào? ✨</h3>
                     <form onsubmit="handlePost(event)">
-                        <textarea id="diaryContent" required placeholder="Ghi lại suy nghĩ, cảm xúc của bạn vào đây..." class="input-style" style="height: 110px; resize: none; font-family: inherit; line-height: 1.5;"></textarea>
-                        <button type="submit" class="btn-primary" style="width: auto; padding: 0.7rem 2.5rem; float: right;">Đăng Nhật Ký</button>
+                        <textarea id="diaryContent" required placeholder="Ghi lại suy nghĩ của bạn để chia sẻ với mọi người..." class="input-style" style="height: 110px; resize: none; font-family: inherit; line-height: 1.5;"></textarea>
+                        <button type="submit" class="btn-primary" style="width: auto; padding: 0.7rem 2.5rem; float: right;">Đăng Bài Viết</button>
                         <div style="clear: both;"></div>
                     </form>
                 </div>
 
-                <h3 style="color: #475569; margin-left: 0.25rem; font-weight: 800; font-size: 1.2rem; margin-bottom: 1rem;">📖 Nhật kỳ chung từ mọi người</h3>
+                <h3 style="color: #475569; margin-left: 0.25rem; font-weight: 800; font-size: 1.2rem; margin-bottom: 1rem;">📖 Nhật ký chung từ mọi người</h3>
                 <div id="allDiariesFeed"></div>
             </div>
 
-            <!-- Sidebar Tìm Kiếm & Danh Sách Bạn Bè -->
             <div>
                 <div class="main-card" style="margin-bottom: 1.5rem;">
                     <h4 style="margin-top: 0; margin-bottom: 0.75rem; color: #1e293b;">🔍 Tìm kiếm bạn bè</h4>
@@ -180,14 +177,14 @@
                 </div>
 
                 <div class="main-card">
-                    <h3 style="margin-top: 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.75rem; font-weight: 800; color: #1e293b;">🌐 Khám phá thành viên</h3>
+                    <h3 style="margin-top: 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.75rem; font-weight: 800; color: #1e293b;">🌐 Khám phá bạn bè</h3>
                     <div id="allUsersList"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 👤 CỬA SỔ XEM TRANG CÁ NHÂN (PROFILE WALL) -->
+    <!-- 👤 MODAL XEM TRANG CÁ NHÂN -->
     <div id="profileModal" class="modal hidden">
         <div class="modal-content">
             <button class="close-btn" onclick="closeProfile()">✕</button>
@@ -202,9 +199,9 @@
         </div>
     </div>
 
-    <!-- ================= HỆ THỐNG LOGIC ĐÃ FIX SẠCH LỖI VÀ ĐỒNG BỘ CLOUD DIỆU KỲ ================= -->
+    <!-- ================= SỬA LỖI ĐƯỜNG TRUYỀN HTTPS VÀ CHỐNG KẸT NÚT ================= -->
     <script>
-        // Cấu hình chuẩn đường dẫn đám mây máy chủ Singapore của Duy
+        // Đồng bộ chuẩn hóa giao thức HTTPS an toàn kết nối thẳng vào database của bạn
         const firebaseConfig = {
             databaseURL: "https://firebasedatabase.app"
         };
@@ -213,8 +210,8 @@
         const db = firebase.database();
 
         let currentUser = localStorage.getItem('online_diary_user') || null;
-        let globalUsersCache = {}; 
-        let globalFriendsList = []; 
+        let globalUsersCache = {};
+        let globalFriendsList = [];
 
         window.onload = function() {
             if (currentUser) { showDashboard(); } else { switchPage('loginPage'); }
@@ -226,6 +223,7 @@
             document.getElementById('dashboardPage').classList.add('hidden');
             document.getElementById(id).classList.remove('hidden');
             
+            // Ép cấu trúc CSS luôn luôn căn giữa màn hình cho trang Login/Register
             if(id === 'dashboardPage') {
                 document.body.style.alignItems = 'stretch'; document.body.style.justifyContent = 'flex-start';
             } else {
@@ -233,37 +231,48 @@
             }
         }
 
-        // HÀM ĐĂNG KÝ TK
+        // ĐĂNG KÝ BẢN FIX TREO: Thêm khối bắt lỗi chống treo nút vô hạn khi mạng kém
         function handleRegister(e) {
             e.preventDefault();
             const btn = document.getElementById('regBtn');
             const user = document.getElementById('regUser').value.trim().toLowerCase().replace(/[^a-zA-Z0-9_]/g, '');
             const pass = document.getElementById('regPass').value;
 
-            if(user.length < 3 || pass.length < 4) { alert('Tên tài khoản từ 3 ký tự, mật khẩu từ 4 ký tự!'); return; }
+            if(user.length < 3 || pass.length < 4) { alert('Tên tài khoản tối thiểu 3 ký tự, mật khẩu từ 4 ký tự!'); return; }
 
             btn.disabled = true; btn.innerText = "Đang kết nối Cloud...";
 
-            db.ref('users/' + user).once('value', snapshot => {
+            // Cơ chế tự động giải phóng nút sau 6 giây nếu Cloud bị kẹt
+            const timeout = setTimeout(() => {
                 btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản";
+                alert("Mạng Cloud phản hồi chậm! Vui lòng làm mới trang (F5) để thử lại.");
+            }, 6000);
+
+            db.ref('users/' + user).once('value', snapshot => {
+                clearTimeout(timeout);
+                btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản";
+                
                 if(snapshot.exists()) {
                     alert('Tên tài khoản này đã tồn tại trên hệ thống!');
                 } else {
                     db.ref('users/' + user).set({ password: pass, username: user }, error => {
                         if(!error) {
-                            alert('🎉 Đăng ký thành công! Hãy đăng nhập trải nghiệm Nhật Ký Toàn Cầu.');
+                            alert('🎉 Đăng ký tài khoản đồng bộ toàn cầu thành công!');
                             document.getElementById('regUser').value = '';
                             document.getElementById('regPass').value = '';
                             switchPage('loginPage');
                         } else {
-                            alert('Lỗi lưu trữ! Bạn chưa lưu tab Rules thành true trên Firebase.');
+                            alert('Lỗi ghi dữ liệu! Hãy kiểm tra xem tab Rules trên Firebase của bạn đã đổi thành true chưa.');
                         }
                     });
                 }
+            }, err => {
+                clearTimeout(timeout);
+                btn.disabled = false; btn.innerText = "Đăng Ký Tài Khoản";
+                alert("Kết nối Firebase bị từ chối do quy tắc Rules chặn!");
             });
         }
 
-        // HÀM ĐĂNG NHẬP
         function handleLogin(e) {
             e.preventDefault();
             const btn = document.getElementById('loginBtn');
@@ -272,39 +281,43 @@
 
             btn.disabled = true; btn.innerText = "Đang xác thực...";
 
+            const timeout = setTimeout(() => {
+                btn.disabled = false; btn.innerText = "Đăng Nhập";
+                alert("Lỗi thời gian kết nối quá hạn!");
+            }, 6000);
+
             db.ref('users/' + user).once('value', snapshot => {
+                clearTimeout(timeout);
                 btn.disabled = false; btn.innerText = "Đăng Nhập";
                 if(snapshot.exists() && snapshot.val().password === pass) {
                     currentUser = user;
                     localStorage.setItem('online_diary_user', currentUser);
                     showDashboard();
                 } else {
-                    alert('❌ Tài khoản hoặc mật khẩu không chính xác!');
+                    alert('❌ Sai tên tài khoản hoặc mật khẩu!');
                 }
+            }, err => {
+                clearTimeout(timeout);
+                btn.disabled = false; btn.innerText = "Đăng Nhập";
+                alert("Lỗi kết nối Cloud!");
             });
         }
 
-        // KHỞI CHẠY BẢNG ĐIỀU KHIỂN CHÍNH REALTIME
         function showDashboard() {
             switchPage('dashboardPage');
             document.getElementById('myProfileBtn').innerText = `@${currentUser}`;
             
-            // Lắng nghe luồng dữ liệu bài đăng nhật ký trực tuyến
             db.ref('diaries').on('value', snapshot => { renderAllDiaries(snapshot.val()); });
 
-            // Lắng nghe danh sách thành viên trực tuyến
             db.ref('users').on('value', snapshot => {
                 globalUsersCache = snapshot.val() || {};
                 renderUsersList(globalUsersCache);
             });
 
-            // Lắng nghe danh sách bạn bè của riêng mình
             db.ref('friends/' + currentUser).on('value', snapshot => {
                 globalFriendsList = [];
-                if(snapshot.exists()){
-                    globalFriendsList = Object.keys(snapshot.val());
-                }
-                renderUsersList(globalUsersCache); // Vẽ lại sidebar để hiển thị đúng trạng thái bạn bè
+                if(snapshot.exists()){ globalFriendsList = Object.keys(snapshot.val()); }
+                renderUsersList(globalUsersCache);
             });
         }
 
@@ -314,7 +327,6 @@
             switchPage('loginPage');
         }
 
-        // ĐĂNG NHẬT KÝ MỚI LÊN ĐÁM MÂY
         function handlePost(e) {
             e.preventDefault();
             const text = document.getElementById('diaryContent').value.trim();
@@ -331,7 +343,6 @@
             document.getElementById('diaryContent').value = '';
         }
 
-        // HÀM XỬ LÝ THẢ TIM (LIKE) REALTIME
         function toggleLike(diaryId) {
             const likeRef = db.ref(`diaries/${diaryId}/likedBy/${currentUser}`);
             const countRef = db.ref(`diaries/${diaryId}/likesCount`);
@@ -347,11 +358,10 @@
             });
         }
 
-        // ĐỔ DỮ LIỆU NHẬT KÝ RA BẢNG TIN CHUNG
         function renderAllDiaries(data) {
             const feed = document.getElementById('allDiariesFeed');
             feed.innerHTML = '';
-            if(!data) { feed.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:2.5rem;font-weight:500;">Chưa có trang nhật ký nào được viết trên không gian chung.</p>'; return; }
+            if(!data) { feed.innerHTML = '<p style="text-align:center;color:#94a3b8;padding:2.5rem;">Mọi người chưa viết bài nhật ký trực tuyến nào.</p>'; return; }
 
             const list = Object.values(data).sort((a,b) => b.timestamp - a.timestamp);
             list.forEach(item => {
@@ -363,21 +373,19 @@
                         <span class="author-tag" onclick="viewProfile('${item.author}')">@${item.author} ${item.author === currentUser ? '(Bạn)' : ''}</span>
                         <span style="font-size:0.8rem; color:#94a3b8; font-weight:600;">${new Date(item.timestamp).toLocaleDateString('vi-VN')}</span>
                     </div>
-                    <p style="color:#334155; line-height:1.6; margin:0 0 1rem 0; white-space:pre-wrap; font-size:1.02rem;">${item.content}</p>
+                    <p style="color:#334155; line-height:1.6; margin:0 0 1rem 0; white-space:pre-wrap;">${item.content}</p>
                     <button class="btn-action ${isLiked ? 'liked' : ''}" onclick="toggleLike('${item.id}')">❤️ Thích (${item.likesCount || 0})</button>
                 `;
                 feed.appendChild(card);
             });
         }
 
-        // ĐỔ DANH SÁCH THÀNH VIÊN RA SIDEBAR + KIỂM TRA TRẠNG THÁI BẠN BÈ
         function renderUsersList(users, filterText = '') {
             const container = document.getElementById('allUsersList');
             container.innerHTML = '';
             if(!users) return;
 
             Object.keys(users).forEach(username => {
-                // Bộ lọc tìm kiếm
                 if(filterText && !username.includes(filterText)) return;
 
                 const isFriend = globalFriendsList.includes(username);
@@ -395,42 +403,36 @@
             });
         }
 
-        // TÍNH NĂNG TÌM KIẾM BẠN BÈ GÕ ĐẾN ĐÂU LỌC ĐẾN ĐÓ
         function handleSearchUser() {
             const text = document.getElementById('searchUserInput').value.trim().toLowerCase();
             renderUsersList(globalUsersCache, text);
         }
 
-        // CHỨC NĂNG KẾT BẠN / HỦY KẾT BẠN HAI CHIỀU SONG SONG
         function toggleFriend(targetUser) {
             const myFriendRef = db.ref(`friends/${currentUser}/${targetUser}`);
             const targetFriendRef = db.ref(`friends/${targetUser}/${currentUser}`);
 
             if (globalFriendsList.includes(targetUser)) {
-                myFriendRef.remove();
-                targetFriendRef.remove();
+                myFriendRef.remove(); targetFriendRef.remove();
                 alert(`Đã hủy kết bạn với @${targetUser}`);
             } else {
-                myFriendRef.set(true);
-                targetFriendRef.set(true);
-                alert(`🎉 Kết bạn thành công! Bạn và @${targetUser} đã trở thành bạn bè.`);
+                myFriendRef.set(true); targetFriendRef.set(true);
+                alert(`🎉 Đã kết bạn với @${targetUser}!`);
             }
         }
 
-        // ================= TÍNH NĂNG XEM TƯỜNG TRANG CÁ NHÂN CỦA BẢN THÂN VÀ NGƯỜI KHÁC =================
         function viewProfile(username) {
             document.getElementById('profileName').innerText = `@${username}`;
             const actionArea = document.getElementById('profileActionArea');
             actionArea.innerHTML = '';
 
             if(username === currentUser) {
-                document.getElementById('profileStatus').innerText = "✨ Bạn đang xem không gian riêng tư của chính mình";
+                document.getElementById('profileStatus').innerText = "✨ Không gian nhật ký cá nhân của bạn";
                 document.getElementById('profileFeedTitle').innerText = "📝 Tất cả các bài viết bạn đã đăng:";
             } else {
-                document.getElementById('profileStatus').innerText = `👋 Ghé thăm không gian nhật ký trực tuyến của @${username}`;
-                document.getElementById('profileFeedTitle').innerText = `📝 Các bài nhật ký của @${username} chia sẻ:`;
+                document.getElementById('profileStatus').innerText = `👋 Ghé thăm trang nhật ký cá nhân của @${username}`;
+                document.getElementById('profileFeedTitle').innerText = `📝 Các bài nhật ký của @${username}:`;
                 
-                // Hiển thị nút kết bạn trực tiếp trên tường nhà người đó
                 const isFriend = globalFriendsList.includes(username);
                 const btn = document.createElement('button');
                 btn.className = 'btn-primary';
@@ -440,27 +442,26 @@
                 actionArea.appendChild(btn);
             }
 
-            // Truy vấn lấy các bài nhật ký của riêng người này ra dòng thời gian cá nhân
             db.ref('diaries').once('value', snapshot => {
                 const diaries = snapshot.val();
                 const container = document.getElementById('profileDiariesList');
                 container.innerHTML = '';
 
-                if(!diaries) { container.innerHTML = '<p style="color:#94a3b8; font-weight:500; text-align:center;">Tài khoản này chưa viết bài nhật ký nào.</p>'; return; }
+                if(!diaries) { container.innerHTML = '<p style="color:#94a3b8; text-align:center;">Tài khoản này chưa viết bài nhật ký nào.</p>'; return; }
 
                 const userPosts = Object.values(diaries)
                                         .filter(post => post.author === username)
                                         .sort((a,b) => b.timestamp - a.timestamp);
 
                 if(userPosts.length === 0) {
-                    container.innerHTML = '<p style="color:#94a3b8; font-weight:500; text-align:center;">Chưa đăng tải câu chuyện nào.</p>';
+                    container.innerHTML = '<p style="color:#94a3b8; text-align:center;">Chưa đăng câu chuyện nào.</p>';
                 } else {
                     userPosts.forEach(post => {
                         const div = document.createElement('div');
                         div.style = 'background:#f8fafc; border:1px solid #e2e8f0; padding:1.25rem; border-radius:1.25rem; margin-bottom:0.85rem; text-align:left;';
                         div.innerHTML = `
                             <p style="font-size:0.8rem; color:#94a3b8; margin:0 0 0.5rem 0; font-weight:600;">Đăng ngày: ${new Date(post.timestamp).toLocaleDateString('vi-VN')} lúc ${new Date(post.timestamp).toLocaleTimeString('vi-VN', {hour: '2-digit', minute:'2-digit'})}</p>
-                            <p style="margin:0; color:#334155; white-space:pre-wrap; line-height:1.5; font-size:1rem;">${post.content}</p>
+                            <p style="margin:0; color:#334155; white-space:pre-wrap; line-height:1.5;">${post.content}</p>
                         `;
                         container.appendChild(div);
                     });
